@@ -66,7 +66,7 @@ export const Footer: React.FC = () => {
                   className="text-fg-muted hover:text-white transition-colors focus:outline-none focus:ring-2 focus:ring-brand-primary/50 rounded px-1 py-0.5"
                   aria-label="Enviar email a hola@eddcode.com"
                 >
-                  hola@eddcode.com
+                  dramirez@eddcode.com
                 </a>
               </li>
               <li>
@@ -78,7 +78,7 @@ export const Footer: React.FC = () => {
                   +52 477 581 3450
                 </a>
               </li>
-              <li className="text-fg-muted">León, Guanajuato. Mexico</li>
+              <li className="text-fg-muted">León, Guanajuato. México</li>
             </ul>
           </div>
         </div>

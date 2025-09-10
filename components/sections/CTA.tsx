@@ -1,7 +1,11 @@
 // components/sections/CTA.tsx - Bloque final con textura y botón de contacto
 import React from 'react'
 
-export const CTA: React.FC = () => {
+interface CTAProps {
+  onScheduleClick: () => void
+}
+
+export const CTA: React.FC<CTAProps> = ({ onScheduleClick }) => {
   return (
     <section className="py-24 px-6">
       <div className="max-w-4xl mx-auto">
@@ -32,6 +36,7 @@ export const CTA: React.FC = () => {
             
             <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
               <button 
+                onClick={onScheduleClick}
                 className="
                   px-10 py-4 bg-white text-bg-deep font-semibold rounded-xl text-lg
                   shadow-xl shadow-white/10

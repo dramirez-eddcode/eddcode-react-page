@@ -2,7 +2,19 @@
 'use client'
 import React from 'react'
 
-export const Hero: React.FC = () => {
+interface HeroProps {
+  onScheduleClick: () => void
+}
+
+export const Hero: React.FC<HeroProps> = ({ onScheduleClick }) => {
+
+  const scrollToCapabilities = () => {
+    const capabilitiesSection = document.getElementById('capacidades')
+    if (capabilitiesSection) {
+      capabilitiesSection.scrollIntoView({ behavior: 'smooth' })
+    }
+  }
+
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
       {/* Fondo texturizado profundo */}
@@ -38,6 +50,7 @@ export const Hero: React.FC = () => {
           {/* CTAs principales */}
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-16">
             <button 
+              onClick={onScheduleClick}
               className="
                 px-10 py-4 text-white font-semibold rounded-xl text-lg
                 bg-gradient-to-r from-accent-blue-start to-accent-blue-mid
@@ -54,6 +67,7 @@ export const Hero: React.FC = () => {
             </button>
             
             <button 
+              onClick={scrollToCapabilities}
               className="
                 px-10 py-4 text-fg-strong font-medium rounded-xl text-lg
                 ring-1 ring-white/10 bg-white/5 backdrop-accent

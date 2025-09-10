@@ -3,7 +3,11 @@
 import React from 'react'
 import { TerminalLogo } from '@/components/ui/TerminalLogo'
 
-export const Header: React.FC = () => {
+interface HeaderProps {
+  onContactClick: () => void
+}
+
+export const Header: React.FC<HeaderProps> = ({ onContactClick }) => {
   const [isMenuOpen, setIsMenuOpen] = React.useState(false)
 
   const navItems = [
@@ -42,10 +46,11 @@ export const Header: React.FC = () => {
               </a>
             ))}
             <button 
+              onClick={onContactClick}
               className="
-                px-6 py-2 bg-brand-primary text-white font-medium rounded-lg
-                hover:bg-brand-primary/90 transition-all duration-200
-                focus:outline-none focus:ring-2 focus:ring-brand-primary/50
+                px-6 py-2 bg-gradient-to-r from-accent-amber-start to-accent-amber-mid text-white font-medium rounded-lg
+                hover:from-accent-amber-mid hover:to-accent-amber-glow hover:shadow-lg hover:shadow-accent-amber-glow/25 transition-all duration-200
+                focus:outline-none focus:ring-2 focus:ring-accent-amber-glow/50
               "
               aria-label="Contactar con el equipo"
             >
@@ -87,10 +92,14 @@ export const Header: React.FC = () => {
               </a>
             ))}
             <button 
+              onClick={() => {
+                onContactClick()
+                setIsMenuOpen(false)
+              }}
               className="
-                w-full mt-4 px-6 py-3 bg-brand-primary text-white font-medium rounded-lg
-                hover:bg-brand-primary/90 transition-all duration-200
-                focus:outline-none focus:ring-2 focus:ring-brand-primary/50
+                w-full mt-4 px-6 py-3 bg-gradient-to-r from-accent-amber-start to-accent-amber-mid text-white font-medium rounded-lg
+                hover:from-accent-amber-mid hover:to-accent-amber-glow hover:shadow-lg hover:shadow-accent-amber-glow/25 transition-all duration-200
+                focus:outline-none focus:ring-2 focus:ring-accent-amber-glow/50
               "
               aria-label="Contactar con el equipo"
             >
