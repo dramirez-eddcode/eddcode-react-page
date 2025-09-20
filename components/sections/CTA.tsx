@@ -6,6 +6,13 @@ interface CTAProps {
 }
 
 export const CTA: React.FC<CTAProps> = ({ onScheduleClick }) => {
+  const handleWhatsAppClick = () => {
+    const phoneNumber = '524775813450' // Formato internacional con código de país para México
+    const message = 'Hola! Me interesa conocer más sobre sus servicios de desarrollo de software.'
+    const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`
+    window.open(whatsappUrl, '_blank')
+  }
+
   return (
     <section className="py-24 px-6">
       <div className="max-w-4xl mx-auto">
@@ -50,11 +57,12 @@ export const CTA: React.FC<CTAProps> = ({ onScheduleClick }) => {
               </button>
               
               <button 
+                onClick={handleWhatsAppClick}
                 className="
                   px-8 py-4 text-white font-medium rounded-xl text-lg
                   ring-1 ring-white/30 bg-white/10 backdrop-blur-sm
                   hover:bg-white/20 hover:ring-white/40
-                  transition-all duration-300
+                  transition-all duration-300 hover:scale-105
                   focus:outline-none focus:ring-4 focus:ring-white/20
                 "
                 aria-label="Enviar mensaje por WhatsApp"

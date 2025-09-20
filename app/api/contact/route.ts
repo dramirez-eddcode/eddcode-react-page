@@ -1,24 +1,17 @@
-// app/api/contact/route.ts - API endpoint para el envío de emails
+// app/api/contact/route.ts - API endpoint para el envío de emails con Resend
 import { NextRequest, NextResponse } from 'next/server'
-import nodemailer from 'nodemailer'
+import { Resend } from 'resend'
 
-// Configurar transporter (usaremos Gmail SMTP como ejemplo)
-const createTransporter = () => {
-  return nodemailer.createTransport({
-    service: 'gmail',
-    auth: {
-      user: process.env.GMAIL_USER,
-      pass: process.env.GMAIL_APP_PASSWORD,
-    },
-  })
-}
+const resend = new Resend(process.env.RESEND_API_KEY)
 
 export async function POST(request: NextRequest) {
   try {
+    console.log('📧 Contact API called')
+    
     const body = await request.json()
     const { type, name, company, email, phone, message, projectDescription, preferredDate, preferredTime, timezone } = body
-
-    const transporter = createTransporter()
+    
+    console.log('📝 Form data received:', { type, name, email })
 
     let subject = ''
     let htmlContent = ''
@@ -95,15 +88,19 @@ export async function POST(request: NextRequest) {
       `
     }
 
-    const mailOptions = {
-      from: process.env.GMAIL_USER,
-      to: 'dramirez@eddcode.com',
+    const emailData = {
+      from: process.env.FROM_EMAIL || 'eddy@notifications.eddcode.com',
+      to: process.env.CONTACT_EMAIL || 'dramirez@eddcode.com',
       subject: subject,
       html: htmlContent,
-      replyTo: email
+      reply_to: email
     }
 
-    await transporter.sendMail(mailOptions)
+    console.log('📬 Sending email to:', emailData.to)
+    console.log('📤 From:', emailData.from)
+    
+    const result = await resend.emails.send(emailData)
+    console.log('✅ Email sent successfully:', result)
 
     return NextResponse.json({ 
       success: true, 
@@ -111,7 +108,14 @@ export async function POST(request: NextRequest) {
     })
 
   } catch (error) {
-    console.error('Error sending email:', error)
+    console.error('❌ Error sending email:', error)
+    
+    // Log más detalles del error
+    if (error instanceof Error) {
+      console.error('Error message:', error.message)
+      console.error('Error stack:', error.stack)
+    }
+    
     return NextResponse.json(
       { success: false, message: 'Error al procesar la solicitud' },
       { status: 500 }

@@ -1,27 +1,15 @@
 # Configuración de Email para Formularios de Contacto
 
-## Configuración rápida con Gmail
+## Configuración con Resend
 
-1. **Copia el archivo de ejemplo:**
-   ```bash
-   cp .env.example .env.local
-   ```
-
-2. **Configura tu cuenta Gmail:**
-   - Ve a tu [Cuenta de Google](https://myaccount.google.com/)
-   - Navega a **Seguridad** > **Verificación en 2 pasos**
-   - Activa la verificación en 2 pasos si no está activa
-   - Ve a **Contraseñas de aplicaciones**
-   - Genera una nueva contraseña de aplicación para "Correo"
-   - Copia la contraseña de 16 dígitos
-
-3. **Actualiza el archivo .env.local:**
+1. **Configuración de variables de entorno:**
+   El archivo `.env.local` ya está configurado con:
    ```env
-   GMAIL_USER=tu-email@gmail.com
-   GMAIL_APP_PASSWORD=tu-contraseña-de-app-de-16-digitos
+   RESEND_API_KEY=re_SRhgsoMy_6dLY3zeKGNFTm9yCVC5S89QC
+   FROM_EMAIL=eddy@notifications.eddcode.com
    ```
 
-4. **Reinicia el servidor de desarrollo:**
+2. **Reinicia el servidor de desarrollo:**
    ```bash
    npm run dev
    ```
@@ -52,6 +40,7 @@ Para cambiar el email de destino, edita el archivo:
 
 ## Troubleshooting
 
-- **Error de autenticación Gmail**: Verifica que hayas generado una App Password y no uses tu contraseña normal
+- **Error de API Key**: Verifica que la RESEND_API_KEY sea correcta
 - **Formularios no se envían**: Revisa la consola del navegador y los logs del servidor
 - **Variables de entorno**: Asegúrate de que el archivo .env.local está en la raíz del proyecto
+- **Dominio verificado**: Asegúrate de que el dominio `notifications.eddcode.com` esté verificado en Resend

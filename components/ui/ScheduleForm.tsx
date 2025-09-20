@@ -32,11 +32,26 @@ export const ScheduleForm: React.FC<ScheduleFormProps> = ({ isOpen, onClose }) =
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [isSubmitted, setIsSubmitted] = useState(false)
 
-  // Generar opciones de horario (9 AM - 6 PM)
+  // Generar opciones de horario (9 AM - 6 PM) con formato 12 horas
   const timeSlots = [
-    '09:00', '09:30', '10:00', '10:30', '11:00', '11:30',
-    '12:00', '12:30', '13:00', '13:30', '14:00', '14:30',
-    '15:00', '15:30', '16:00', '16:30', '17:00', '17:30'
+    { value: '09:00', label: '9:00 AM' },
+    { value: '09:30', label: '9:30 AM' },
+    { value: '10:00', label: '10:00 AM' },
+    { value: '10:30', label: '10:30 AM' },
+    { value: '11:00', label: '11:00 AM' },
+    { value: '11:30', label: '11:30 AM' },
+    { value: '12:00', label: '12:00 PM' },
+    { value: '12:30', label: '12:30 PM' },
+    { value: '13:00', label: '1:00 PM' },
+    { value: '13:30', label: '1:30 PM' },
+    { value: '14:00', label: '2:00 PM' },
+    { value: '14:30', label: '2:30 PM' },
+    { value: '15:00', label: '3:00 PM' },
+    { value: '15:30', label: '3:30 PM' },
+    { value: '16:00', label: '4:00 PM' },
+    { value: '16:30', label: '4:30 PM' },
+    { value: '17:00', label: '5:00 PM' },
+    { value: '17:30', label: '5:30 PM' }
   ]
 
   // Obtener fecha mínima (hoy)
@@ -269,6 +284,15 @@ export const ScheduleForm: React.FC<ScheduleFormProps> = ({ isOpen, onClose }) =
                       text-fg-strong
                       focus:outline-none focus:ring-2 focus:ring-accent-blue-glow/50 focus:border-accent-blue-glow/50
                       transition-colors
+                      [&::-webkit-calendar-picker-indicator]:bg-accent-blue-glow/20
+                      [&::-webkit-calendar-picker-indicator]:rounded
+                      [&::-webkit-calendar-picker-indicator]:p-1
+                      [&::-webkit-calendar-picker-indicator]:cursor-pointer
+                      [&::-webkit-calendar-picker-indicator]:hover:bg-accent-blue-glow/30
+                      [&::-webkit-datetime-edit-text]:text-fg-muted
+                      [&::-webkit-datetime-edit-month-field]:text-fg-strong
+                      [&::-webkit-datetime-edit-day-field]:text-fg-strong
+                      [&::-webkit-datetime-edit-year-field]:text-fg-strong
                     "
                   />
                 </div>
@@ -291,18 +315,25 @@ export const ScheduleForm: React.FC<ScheduleFormProps> = ({ isOpen, onClose }) =
                     "
                   >
                     <option value="">Selecciona una hora</option>
-                    {timeSlots.map(time => (
-                      <option key={time} value={time}>
-                        {time}
+                    {timeSlots.map(slot => (
+                      <option key={slot.value} value={slot.value}>
+                        {slot.label}
                       </option>
                     ))}
                   </select>
                 </div>
               </div>
 
-              <div className="text-xs text-fg-muted">
-                <p>Zona horaria detectada: {formData.timezone}</p>
-                <p>Nos contactaremos contigo para confirmar la disponibilidad.</p>
+              <div className="text-xs text-fg-muted bg-bg-surface/30 rounded-lg p-3 border border-ring-soft">
+                <div className="flex items-center gap-2 mb-1">
+                  <svg className="w-4 h-4 text-accent-blue-glow" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                  <span className="font-medium">Zona horaria detectada: {formData.timezone}</span>
+                </div>
+                <p>• Horarios disponibles: Lunes a Viernes, 9:00 AM - 6:00 PM</p>
+                <p>• Te enviaremos una confirmación por email con el link de la llamada</p>
+                <p>• Duración estimada: 30 minutos</p>
               </div>
 
               <button

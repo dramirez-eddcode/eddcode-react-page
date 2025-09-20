@@ -1,4 +1,4 @@
-// File: C:\Users\Alex\Documents\GitHub\eddcode-landing\app\page.tsx
+// File: /Users/dramirez/Development/EDDCODE/EDDCODE/eddcode-react-page/app/page.tsx
 import * as entry from '../../../app/page.js'
 import type { ResolvingMetadata, ResolvingViewport } from 'next/dist/lib/metadata/types/metadata-interface.js'
 
