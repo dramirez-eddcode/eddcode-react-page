@@ -1,6 +1,7 @@
 // components/ui/ScheduleForm.tsx - Formulario para agendar llamadas
 'use client'
 import React, { useState } from 'react'
+import { trackContactFormSubmit, trackContactFormError, trackUserJourney } from '@/components/analytics/gtag'
 
 interface ScheduleFormProps {
   isOpen: boolean
@@ -98,11 +99,14 @@ export const ScheduleForm: React.FC<ScheduleFormProps> = ({ isOpen, onClose }) =
           preferredTime: '',
           timezone: Intl.DateTimeFormat().resolvedOptions().timeZone
         })
+        trackContactFormSubmit('schedule', 'schedule_form')
+        trackUserJourney('schedule_form_submitted', 2, 3)
       } else {
         throw new Error('Error al agendar la llamada')
       }
     } catch (error) {
       console.error('Error:', error)
+      trackContactFormError('schedule', error instanceof Error ? error.message : 'Unknown error')
       alert('Hubo un error al agendar la llamada. Por favor intenta nuevamente.')
     } finally {
       setIsSubmitting(false)

@@ -9,6 +9,9 @@ interface TexturedAccentCardProps {
   hoverable?: boolean
   style?: React.CSSProperties
   intensity?: 'light' | 'normal' | 'strong'
+  onClick?: () => void
+  onMouseEnter?: () => void
+  onMouseLeave?: () => void
 }
 
 export const TexturedAccentCard: React.FC<TexturedAccentCardProps> = ({ 
@@ -17,7 +20,10 @@ export const TexturedAccentCard: React.FC<TexturedAccentCardProps> = ({
   accent,
   hoverable = true,
   style,
-  intensity = 'strong'
+  intensity = 'strong',
+  onClick,
+  onMouseEnter,
+  onMouseLeave
 }) => {
   const waveId = React.useId()
   
@@ -99,7 +105,13 @@ export const TexturedAccentCard: React.FC<TexturedAccentCardProps> = ({
   }
 
   return (
-    <div className={`relative overflow-hidden rounded-2xl ${className}`} style={style}>
+    <div 
+      className={`relative overflow-hidden rounded-2xl ${className}`} 
+      style={style}
+      onClick={onClick}
+      onMouseEnter={onMouseEnter}
+      onMouseLeave={onMouseLeave}
+    >
       <div 
         className={baseClasses}
         style={gradientStyle}

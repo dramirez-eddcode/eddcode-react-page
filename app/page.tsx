@@ -13,24 +13,48 @@ import { Portafolio } from '@/components/sections/Portafolio'
 import { CTA } from '@/components/sections/CTA'
 import { ContactForm } from '@/components/ui/ContactForm'
 import { ScheduleForm } from '@/components/ui/ScheduleForm'
+import { useAnalyticsInitialization } from '@/components/analytics/useAnalytics'
+import { useAdvancedAnalytics, useBusinessMetrics } from '@/components/analytics/useAdvancedAnalytics'
+import { trackContactFormOpen, trackUserJourney } from '@/components/analytics/gtag'
 
 export default function Home() {
   const [isContactFormOpen, setIsContactFormOpen] = React.useState(false)
   const [isScheduleFormOpen, setIsScheduleFormOpen] = React.useState(false)
 
+  // Inicializar analytics
+  useAnalyticsInitialization()
+  useAdvancedAnalytics()
+  const { addSessionValue, trackConversionFunnel } = useBusinessMetrics()
+
+  const handleContactFormOpen = (source: string) => {
+    trackContactFormOpen('contact', source)
+    trackUserJourney('contact_form_opened', 1, 3)
+    trackConversionFunnel('contact_form_opened', true)
+    addSessionValue(25, 'contact_form_opened')
+    setIsContactFormOpen(true)
+  }
+
+  const handleScheduleFormOpen = (source: string) => {
+    trackContactFormOpen('schedule', source)
+    trackUserJourney('schedule_form_opened', 1, 3)
+    trackConversionFunnel('schedule_form_opened', true)
+    addSessionValue(50, 'schedule_form_opened')
+    setIsScheduleFormOpen(true)
+  }
+
   return (
     <>
-      <Header onContactClick={() => setIsContactFormOpen(true)} />
+      <Header onContactClick={() => handleContactFormOpen('header')} />
       
       <main>
-        <Hero onScheduleClick={() => setIsScheduleFormOpen(true)} />
+        <Hero onScheduleClick={() => handleScheduleFormOpen('hero')} />
         <Servicios />
         <Beneficios />
         <Capabilities />
         <HowWeWork />
         <ConsoleDemo />
         <Portafolio />
-        <CTA onScheduleClick={() => setIsScheduleFormOpen(true)} />
+        <CTA onScheduleClick={() => handleScheduleFormOpen('cta')} />
       </main>
       
       <Footer />

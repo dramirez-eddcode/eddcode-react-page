@@ -31,7 +31,22 @@ export function GoogleAnalytics() {
               site_search: true,
               video_engagement: true,
               file_downloads: true
-            }
+            },
+            custom_map: {
+              'custom_parameter_1': 'form_type',
+              'custom_parameter_2': 'service_name',
+              'custom_parameter_3': 'interaction_type'
+            },
+            conversion_linker: true,
+            allow_google_signals: true,
+            anonymize_ip: false
+          });
+          
+          // Configurar eventos de conversión
+          gtag('event', 'conversion', {
+            'send_to': '${GA_TRACKING_ID}',
+            'event_category': 'lead_generation',
+            'event_label': 'site_loaded'
           });
         `}
       </Script>

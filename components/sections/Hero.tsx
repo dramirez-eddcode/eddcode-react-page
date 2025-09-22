@@ -1,22 +1,31 @@
 // components/sections/Hero.tsx - Hero actualizado con tema oscuro y nuevo contenido
 'use client'
 import React from 'react'
+import { useSectionTracking } from '@/components/analytics/useAnalytics'
+import { trackCallToAction } from '@/components/analytics/gtag'
 
 interface HeroProps {
   onScheduleClick: () => void
 }
 
 export const Hero: React.FC<HeroProps> = ({ onScheduleClick }) => {
+  const sectionRef = useSectionTracking('hero', 0.3)
 
   const scrollToCapabilities = () => {
+    trackCallToAction('Ver Capacidades', 'hero', 'secondary')
     const capabilitiesSection = document.getElementById('capacidades')
     if (capabilitiesSection) {
       capabilitiesSection.scrollIntoView({ behavior: 'smooth' })
     }
   }
 
+  const handleScheduleClick = () => {
+    trackCallToAction('Agenda una llamada', 'hero', 'primary')
+    onScheduleClick()
+  }
+
   return (
-    <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
+    <section ref={sectionRef} className="relative min-h-screen flex items-center justify-center overflow-hidden">
       {/* Fondo texturizado profundo */}
       <div className="
         absolute inset-0 
@@ -50,7 +59,7 @@ export const Hero: React.FC<HeroProps> = ({ onScheduleClick }) => {
           {/* CTAs principales */}
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-16">
             <button 
-              onClick={onScheduleClick}
+              onClick={handleScheduleClick}
               className="
                 px-10 py-4 text-white font-semibold rounded-xl text-lg
                 bg-gradient-to-r from-accent-blue-start to-accent-blue-mid

@@ -1,6 +1,7 @@
 // components/ui/ContactForm.tsx - Formulario de contacto general
 'use client'
 import React, { useState } from 'react'
+import { trackContactFormSubmit, trackContactFormError, trackUserJourney } from '@/components/analytics/gtag'
 
 interface ContactFormProps {
   isOpen: boolean
@@ -51,11 +52,14 @@ export const ContactForm: React.FC<ContactFormProps> = ({ isOpen, onClose }) => 
       if (response.ok) {
         setIsSubmitted(true)
         setFormData({ name: '', company: '', email: '', message: '' })
+        trackContactFormSubmit('contact', 'contact_form')
+        trackUserJourney('contact_form_submitted', 2, 3)
       } else {
         throw new Error('Error al enviar el formulario')
       }
     } catch (error) {
       console.error('Error:', error)
+      trackContactFormError('contact', error instanceof Error ? error.message : 'Unknown error')
       alert('Hubo un error al enviar el formulario. Por favor intenta nuevamente.')
     } finally {
       setIsSubmitting(false)

@@ -1,6 +1,9 @@
 // components/sections/Servicios.tsx - Grid de servicios con acentos vibrantes Coder
+'use client'
 import React from 'react'
 import { TexturedAccentCard, PurpleAccentCard, BlueAccentCard, AmberAccentCard, PinkAccentCard } from '../ui/TexturedAccentCard'
+import { useSectionTracking } from '@/components/analytics/useAnalytics'
+import { trackServiceInterest } from '@/components/analytics/gtag'
 
 const servicios = [
   {
@@ -46,8 +49,14 @@ const servicios = [
 ]
 
 export const Servicios: React.FC = () => {
+  const sectionRef = useSectionTracking('servicios', 0.3)
+
+  const handleServiceInteraction = (serviceName: string, interactionType: 'hover' | 'click') => {
+    trackServiceInterest(serviceName, interactionType)
+  }
+
   return (
-    <section className="py-24 px-6" id="servicios">
+    <section ref={sectionRef} className="py-24 px-6" id="servicios">
       <div className="max-w-6xl mx-auto">
         <div className="text-center mb-16">
           <h2 className="
@@ -67,8 +76,10 @@ export const Servicios: React.FC = () => {
             <TexturedAccentCard 
               key={index}
               accent={servicio.accent}
-              className="group animate-fade-up h-full flex flex-col"
+              className="group animate-fade-up h-full flex flex-col cursor-pointer"
               style={{ animationDelay: `${index * 150}ms` }}
+              onClick={() => handleServiceInteraction(servicio.title, 'click')}
+              onMouseEnter={() => handleServiceInteraction(servicio.title, 'hover')}
             >
               <div className="flex items-start gap-4 flex-1">
                 <div className={`
