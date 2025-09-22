@@ -1,6 +1,7 @@
 // app/layout.tsx - Layout principal con metadata y estructura HTML
 import type { Metadata } from 'next'
 import { metadata } from './metadata'
+import { GoogleAnalytics } from '@/components/analytics/GoogleAnalytics'
 import './globals.css'
 
 export { metadata }
@@ -21,6 +22,7 @@ export default function RootLayout({
         <link rel="icon" type="image/png" href="/favicon.png" />
       </head>
       <body className="antialiased selection:bg-brand-primary/30 selection:text-white">
+        <GoogleAnalytics />
         {children}
       </body>
     </html>
