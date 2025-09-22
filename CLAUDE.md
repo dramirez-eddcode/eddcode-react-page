@@ -33,7 +33,7 @@ Before the contact forms work, you need to configure Gmail SMTP:
 
 ## Architecture Overview
 
-This is a Next.js 14 (App Router) landing page for EddCode, a software development company. The application features a modern "coder-style" design with textured gradients and sophisticated visual effects.
+This is a Next.js 14 (App Router) landing page for EDDCODE, a software development company. The application features a modern "coder-style" design with textured gradients and sophisticated visual effects.
 
 ### Key Technologies
 - **Next.js 14** with App Router and TypeScript

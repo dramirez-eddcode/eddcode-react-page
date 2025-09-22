@@ -1,4 +1,4 @@
-# EddCode Landing Page
+# EDDCODE Landing Page
 
 Landing page profesional para empresa de desarrollo de software, construida con React, Next.js y TailwindCSS, siguiendo el diseño especificado en `landing-brief.md`.
 
@@ -151,4 +151,4 @@ Las animaciones están definidas en `globals.css` y se pueden extender en la con
 
 Para consultas sobre implementación o customización:
 - Email: hola@eddcode.com
-- LinkedIn: [EddCode](https://linkedin.com/company/eddcode)
+- LinkedIn: [EDDCODE](https://linkedin.com/company/eddcode)

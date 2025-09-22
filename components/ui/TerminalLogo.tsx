@@ -7,7 +7,7 @@ interface TerminalLogoProps {
 }
 
 export const TerminalLogo: React.FC<TerminalLogoProps> = ({ 
-  text = 'EddCode',
+  text = 'EDDCODE',
   className = ''
 }) => {
   const [showCursor, setShowCursor] = useState(true)

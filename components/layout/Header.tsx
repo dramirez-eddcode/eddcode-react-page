@@ -24,7 +24,7 @@ export const Header: React.FC<HeaderProps> = ({ onContactClick }) => {
             <a 
               href="#" 
               className="hover:opacity-80 transition-opacity focus:outline-none focus:ring-2 focus:ring-green-400/50 rounded-lg px-2 py-1"
-              aria-label="EddCode - Inicio"
+              aria-label="EDDCODE - Inicio"
             >
               <TerminalLogo className="text-2xl" />
             </a>
