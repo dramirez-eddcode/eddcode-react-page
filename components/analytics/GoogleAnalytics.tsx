@@ -20,7 +20,19 @@ export function GoogleAnalytics() {
           window.dataLayer = window.dataLayer || [];
           function gtag(){dataLayer.push(arguments);}
           gtag('js', new Date());
-          gtag('config', '${GA_TRACKING_ID}');
+          
+          gtag('config', '${GA_TRACKING_ID}', {
+            page_title: document.title,
+            page_location: window.location.href,
+            send_page_view: true,
+            enhanced_measurement: {
+              scrolls: true,
+              outbound_clicks: true,
+              site_search: true,
+              video_engagement: true,
+              file_downloads: true
+            }
+          });
         `}
       </Script>
     </>
