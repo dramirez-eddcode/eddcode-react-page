@@ -16,31 +16,30 @@ export const useWebVitals = () => {
       })
     }
 
-    // Intentar usar web-vitals si está disponible, sino usar métricas básicas
-    try {
-      // @ts-ignore - web-vitals might not be installed
-      import('web-vitals').then(({ getCLS, getFID, getFCP, getLCP, getTTFB }) => {
-        getCLS(trackWebVital)
-        getFID(trackWebVital)
-        getFCP(trackWebVital)
-        getLCP(trackWebVital)
-        getTTFB(trackWebVital)
-      }).catch(() => {
-        // Fallback para métricas básicas si web-vitals no está disponible
-        if ('performance' in window) {
-          const navigation = performance.getEntriesByType('navigation')[0] as PerformanceNavigationTiming
-          if (navigation) {
-            trackEvent('page_load_timing', {
-              dom_content_loaded: Math.round(navigation.domContentLoadedEventEnd - navigation.domContentLoadedEventStart),
-              load_complete: Math.round(navigation.loadEventEnd - navigation.loadEventStart),
-              event_category: 'performance'
-            })
-          }
+    // Usar métricas básicas de performance disponibles en el navegador
+    if ('performance' in window) {
+      setTimeout(() => {
+        const navigation = performance.getEntriesByType('navigation')[0] as PerformanceNavigationTiming
+        if (navigation) {
+          // Simular Core Web Vitals con métricas disponibles
+          trackWebVital('LCP', navigation.loadEventEnd - navigation.loadEventStart, 'manual-lcp')
+          trackWebVital('FCP', navigation.domContentLoadedEventEnd - navigation.domContentLoadedEventStart, 'manual-fcp')
+          trackWebVital('TTFB', navigation.responseStart - navigation.requestStart, 'manual-ttfb')
+          
+          trackEvent('page_load_timing', {
+            dom_content_loaded: Math.round(navigation.domContentLoadedEventEnd - navigation.domContentLoadedEventStart),
+            load_complete: Math.round(navigation.loadEventEnd - navigation.loadEventStart),
+            first_byte: Math.round(navigation.responseStart - navigation.requestStart),
+            event_category: 'performance'
+          })
         }
-      })
-    } catch (error) {
-      // Fallback adicional
-      console.log('Analytics: Using basic performance tracking')
+        
+        // Trackear paint timings si están disponibles
+        const paintEntries = performance.getEntriesByType('paint')
+        paintEntries.forEach((entry) => {
+          trackWebVital(entry.name, entry.startTime, `paint-${entry.name}`)
+        })
+      }, 0)
     }
   }, [])
 }
