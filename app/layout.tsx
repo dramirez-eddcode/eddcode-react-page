@@ -1,6 +1,7 @@
 // app/layout.tsx - Layout principal con metadata y estructura HTML
 import type { Metadata } from 'next'
 import { metadata } from './metadata'
+import { organizationSchema, websiteSchema, breadcrumbSchema } from './schema'
 import { GoogleAnalytics } from '@/components/analytics/GoogleAnalytics'
 import { Analytics } from '@vercel/analytics/next'
 import './globals.css'
@@ -22,6 +23,15 @@ export default function RootLayout({
         <link rel="icon" type="image/png" href="/favicon.png" />
         <link rel="shortcut icon" href="/favicon.png" />
         <link rel="apple-touch-icon" href="/favicon.png" />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@graph": [organizationSchema, websiteSchema, breadcrumbSchema]
+            })
+          }}
+        />
       </head>
       <body className="antialiased selection:bg-brand-primary/30 selection:text-white">
         <GoogleAnalytics />

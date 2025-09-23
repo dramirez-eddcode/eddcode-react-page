@@ -56,10 +56,12 @@ export const Servicios: React.FC = () => {
   }
 
   return (
-    <section ref={sectionRef} className="py-24 px-6" id="servicios">
+    <section ref={sectionRef} className="py-24 px-6" id="servicios" aria-labelledby="servicios-title">
       <div className="max-w-6xl mx-auto">
         <div className="text-center mb-16">
-          <h2 className="
+          <h2 
+            id="servicios-title"
+            className="
             text-3xl md:text-4xl lg:text-5xl font-bold mb-6
             bg-gradient-to-r from-white via-white to-white/70 
             bg-clip-text text-transparent

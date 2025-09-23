@@ -46,10 +46,12 @@ const beneficios = [
 
 export const Beneficios: React.FC = () => {
   return (
-    <section className="py-24 px-6 bg-bg-deep/50" id="beneficios">
+    <section className="py-24 px-6 bg-bg-deep/50" id="beneficios" aria-labelledby="beneficios-title">
       <div className="max-w-6xl mx-auto">
         <div className="text-center mb-16">
-          <h2 className="
+          <h2 
+            id="beneficios-title"
+            className="
             text-3xl md:text-4xl lg:text-5xl font-bold mb-6
             bg-gradient-to-r from-white via-white to-white/70 
             bg-clip-text

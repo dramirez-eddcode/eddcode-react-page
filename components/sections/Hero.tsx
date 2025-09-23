@@ -25,7 +25,12 @@ export const Hero: React.FC<HeroProps> = ({ onScheduleClick }) => {
   }
 
   return (
-    <section ref={sectionRef} className="relative min-h-screen flex items-center justify-center overflow-hidden">
+    <section 
+      ref={sectionRef} 
+      className="relative min-h-screen flex items-center justify-center overflow-hidden"
+      aria-labelledby="hero-title"
+      role="banner"
+    >
       {/* Fondo texturizado profundo */}
       <div className="
         absolute inset-0 
@@ -36,7 +41,9 @@ export const Hero: React.FC<HeroProps> = ({ onScheduleClick }) => {
       {/* Contenido principal */}
       <div className="relative z-10 max-w-6xl mx-auto px-6 text-center">
         <div className="animate-fade-up">
-          <h1 className="
+          <h1 
+            id="hero-title"
+            className="
             text-4xl md:text-6xl lg:text-7xl font-bold 
             text-balance leading-tight mb-8
             text-fg-strong
