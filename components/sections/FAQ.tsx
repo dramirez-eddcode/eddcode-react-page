@@ -136,8 +136,8 @@ export const FAQ: React.FC = () => {
           <a
             href="#contacto"
             className="
-              inline-flex items-center gap-2 text-brand-primary hover:text-white
-              transition-colors font-medium
+              inline-flex items-center gap-2 text-[#A78BFA] hover:text-white
+              transition-colors font-medium underline underline-offset-2
             "
           >
             {t('faq.contactUs')}

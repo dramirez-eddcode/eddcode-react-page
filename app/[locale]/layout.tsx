@@ -45,11 +45,13 @@ export default async function LocaleLayout({
   return (
     <html lang={locale === 'es' ? 'es-MX' : 'en-US'} className="scroll-smooth">
       <head>
-        {/* Preconnect para optimizar carga de fuentes */}
+        {/* Preconnect para optimizar carga - orden de prioridad */}
+        <link rel="preconnect" href="https://www.googletagmanager.com" />
+        <link rel="preconnect" href="https://www.google-analytics.com" />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
 
-        {/* DNS Prefetch para recursos externos */}
+        {/* DNS Prefetch adicional */}
         <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
         <link rel="dns-prefetch" href="https://www.google-analytics.com" />
 
