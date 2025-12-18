@@ -1,13 +1,19 @@
 'use client'
 
 import { useEffect, useRef, useCallback } from 'react'
-import { 
-  trackSectionView, 
-  trackScrollDepth, 
-  trackTimeOnPage, 
+import {
+  trackSectionView,
+  trackScrollDepth,
+  trackTimeOnPage,
   initializeUserSession,
   trackPageLoad,
-  trackError
+  trackError,
+  initializeSession,
+  updateMaxScroll,
+  incrementInteraction,
+  trackEngagementQuality,
+  addLeadScore,
+  getLocale
 } from './gtag'
 
 // Hook para tracking automático de secciones visibles
@@ -46,20 +52,28 @@ export const useSectionTracking = (sectionName: string, threshold = 0.5) => {
   return sectionRef
 }
 
-// Hook para tracking de scroll depth
+// Hook para tracking de scroll depth con lead scoring
 export const useScrollTracking = () => {
   const scrollDepthsTracked = useRef(new Set<number>())
 
   useEffect(() => {
     const handleScroll = () => {
       const scrolled = Math.round((window.scrollY / (document.documentElement.scrollHeight - window.innerHeight)) * 100)
-      
+
+      // Actualizar max scroll para engagement quality
+      updateMaxScroll(scrolled)
+
       // Trackear en intervalos de 25%
       const milestones = [25, 50, 75, 90, 100]
       milestones.forEach(milestone => {
         if (scrolled >= milestone && !scrollDepthsTracked.current.has(milestone)) {
           scrollDepthsTracked.current.add(milestone)
           trackScrollDepth(milestone)
+
+          // Add lead score for deep scrolls
+          if (milestone >= 75) {
+            addLeadScore('deep_scroll')
+          }
         }
       })
     }
@@ -69,7 +83,7 @@ export const useScrollTracking = () => {
   }, [])
 }
 
-// Hook para tracking de tiempo en página
+// Hook para tracking de tiempo en página con lead scoring
 export const useTimeTracking = () => {
   const sessionStartRef = useRef<number>(0)
   const intervalsTracked = useRef(new Set<number>())
@@ -79,13 +93,18 @@ export const useTimeTracking = () => {
 
     const interval = setInterval(() => {
       const timeSpent = Math.round((Date.now() - sessionStartRef.current) / 1000)
-      
+
       // Trackear en intervalos específicos
       const milestones = [30, 60, 120, 300, 600] // 30s, 1m, 2m, 5m, 10m
       milestones.forEach(milestone => {
         if (timeSpent >= milestone && !intervalsTracked.current.has(milestone)) {
           intervalsTracked.current.add(milestone)
           trackTimeOnPage(milestone)
+
+          // Add lead score for high engagement time
+          if (milestone >= 120) { // 2+ minutes
+            addLeadScore('high_engagement_time')
+          }
         }
       })
     }, 10000) // Revisar cada 10 segundos
@@ -99,6 +118,8 @@ export const useTimeTracking = () => {
       const finalTime = Math.round((Date.now() - sessionStartRef.current) / 1000)
       if (finalTime > 5) { // Solo si estuvo más de 5 segundos
         trackTimeOnPage(finalTime)
+        // Calculate and send engagement quality score on exit
+        trackEngagementQuality()
       }
     }
 
@@ -158,21 +179,36 @@ export const useAnalyticsInitialization = () => {
   useErrorTracking()
 
   useEffect(() => {
+    // Initialize session tracking
+    initializeSession()
     initializeUserSession()
-    
+
+    // Track page view with locale
+    const locale = getLocale()
+    addLeadScore('page_view')
+
+    // Track clicks for interaction counting
+    const handleClick = () => {
+      incrementInteraction()
+    }
+
     // Tracking adicional para optimización de conversión
     const handlePageFocus = () => {
       trackSectionView('page_focus_regained')
     }
-    
+
     const handlePageBlur = () => {
       trackSectionView('page_focus_lost')
+      // Send engagement quality when user leaves
+      trackEngagementQuality()
     }
-    
+
+    document.addEventListener('click', handleClick)
     window.addEventListener('focus', handlePageFocus)
     window.addEventListener('blur', handlePageBlur)
-    
+
     return () => {
+      document.removeEventListener('click', handleClick)
       window.removeEventListener('focus', handlePageFocus)
       window.removeEventListener('blur', handlePageBlur)
     }

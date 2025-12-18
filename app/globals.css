@@ -5,41 +5,47 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
 
 :root {
-  /* Tema Coder - Variables CSS con acentos vibrantes */
+  /* Tema EDDCODE - Paleta de marca */
   --bg-deep: #0F1117;
   --bg-surface: #12141C;
   --bg-card: #1A1D29;
-  
+
+  /* Colores de texto */
   --fg-strong: rgba(255,255,255,0.95);
   --fg-soft: rgba(255,255,255,0.72);
   --fg-muted: rgba(255,255,255,0.60);
-  
-  /* Acentos Coder (gradientes 3-stop) */
-  --accent-purple-start: #6D28D9;
-  --accent-purple-mid: #9333EA;
-  --accent-purple-glow: #C084FC;
-  
+  --fg-light: #FCFAFA;  /* Para fondos oscuros con gradiente */
+
+  /* Color principal de marca EDDCODE */
+  --brand-primary: #5D41BE;
+  --brand-primary-light: #5B40B9;
+  --brand-primary-dark: #352B6B;
+
+  /* Acentos basados en el color principal */
+  --accent-purple-start: #352B6B;
+  --accent-purple-mid: #5D41BE;
+  --accent-purple-glow: #7B5FD9;
+
   --accent-pink-start: #DB2777;
   --accent-pink-mid: #EC4899;
   --accent-pink-glow: #F472B6;
-  
+
   --accent-rose-start: #E11D48;
   --accent-rose-mid: #F43F5E;
   --accent-rose-glow: #FDA4AF;
-  
+
   --accent-amber-start: #B45309;
   --accent-amber-mid: #D97706;
   --accent-amber-glow: #F59E0B;
-  
-  --accent-blue-start: #2563EB;
-  --accent-blue-mid: #3B82F6;
-  --accent-blue-glow: #93C5FD;
-  
+
+  --accent-blue-start: #352B6B;
+  --accent-blue-mid: #5D41BE;
+  --accent-blue-glow: #7B5FD9;
+
   --ring-soft: rgba(255,255,255,0.08);
-  
+
   /* Compatibilidad */
-  --brand-primary: #3B82F6;
-  --brand-accent: #9333EA;
+  --brand-accent: #5D41BE;
 }
 
 * {

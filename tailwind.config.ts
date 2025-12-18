@@ -10,55 +10,58 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        // Fondos estilo Coder (negro profundo)
+        // Fondos EDDCODE (negro profundo)
         bg: {
-          deep: '#0F1117',      // Fondo global (igual referencia)
+          deep: '#0F1117',      // Fondo global
           surface: '#12141C',    // Superficies elevadas
           card: '#1A1D29',      // Base para tarjetas
         },
         // Texto optimizado para máximo contraste
         fg: {
           strong: 'rgba(255,255,255,0.95)',  // Títulos principales
-          soft: 'rgba(255,255,255,0.72)',    // Texto normal  
+          soft: 'rgba(255,255,255,0.72)',    // Texto normal
           muted: 'rgba(255,255,255,0.60)',   // Texto secundario
+          light: '#FCFAFA',                   // Para fondos oscuros con gradiente
         },
-        // Acentos Coder-like (gradientes de 3 stops cada uno)
+        // Color principal de marca EDDCODE
+        brand: {
+          primary: '#5D41BE',     // Color principal
+          light: '#5B40B9',       // Inicio de degradado
+          dark: '#352B6B',        // Fin de degradado
+          accent: '#5D41BE',      // Alias para compatibilidad
+        },
+        // Acentos basados en el color de marca
         accent: {
           purple: {
-            start: '#6D28D9',   // Purple-800
-            mid: '#9333EA',     // Purple-600  
-            glow: '#C084FC',    // Purple-400
+            start: '#352B6B',   // Oscuro del degradado
+            mid: '#5D41BE',     // Color principal
+            glow: '#7B5FD9',    // Versión clara
           },
           pink: {
-            start: '#DB2777',   // Pink-700
-            mid: '#EC4899',     // Pink-500
-            glow: '#F472B6',    // Pink-300
+            start: '#DB2777',
+            mid: '#EC4899',
+            glow: '#F472B6',
           },
           rose: {
-            start: '#E11D48',   // Rose-600
-            mid: '#F43F5E',     // Rose-500
-            glow: '#FDA4AF',    // Rose-300
+            start: '#E11D48',
+            mid: '#F43F5E',
+            glow: '#FDA4AF',
           },
           amber: {
-            start: '#B45309',   // Amber-700
-            mid: '#D97706',     // Amber-600
-            glow: '#F59E0B',    // Amber-500
+            start: '#B45309',
+            mid: '#D97706',
+            glow: '#F59E0B',
           },
           blue: {
-            start: '#2563EB',   // Blue-600
-            mid: '#3B82F6',     // Blue-500
-            glow: '#93C5FD',    // Blue-300
+            start: '#352B6B',   // Usando colores de marca
+            mid: '#5D41BE',
+            glow: '#7B5FD9',
           }
         },
         // Bordes y sombras sutiles
         ring: {
           soft: 'rgba(255,255,255,0.08)',
         },
-        // Compatibilidad con componentes existentes
-        brand: {
-          primary: '#3B82F6',    // Mapeo a accent.blue.mid
-          accent: '#9333EA',     // Mapeo a accent.purple.mid
-        }
       },
       fontFamily: {
         sans: ['Inter', 'ui-sans-serif', 'system-ui'],

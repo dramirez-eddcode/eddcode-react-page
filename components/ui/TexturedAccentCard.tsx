@@ -27,20 +27,20 @@ export const TexturedAccentCard: React.FC<TexturedAccentCardProps> = ({
 }) => {
   const waveId = React.useId()
   
-  // Define gradient stops para cada acento
+  // Define gradient stops para cada acento - Usando colores de marca EDDCODE
   const getAccentConfig = () => {
     const configs = {
       purple: {
-        start: '#6D28D9',
-        mid: '#7C3AED', 
-        glow: '#8B5CF6',
+        start: '#352B6B',   // brand-dark
+        mid: '#5D41BE',     // brand-primary
+        glow: '#7B5FD9',    // versión clara
         textColor: 'text-accent-purple-glow',
         ringColor: 'ring-accent-purple-mid/30'
       },
       pink: {
         start: '#EC4899',
         mid: '#F472B6',
-        glow: '#FBCFE8', 
+        glow: '#FBCFE8',
         textColor: 'text-accent-pink-glow',
         ringColor: 'ring-accent-pink-mid/30'
       },
@@ -48,7 +48,7 @@ export const TexturedAccentCard: React.FC<TexturedAccentCardProps> = ({
         start: '#F43F5E',
         mid: '#FB7185',
         glow: '#FDA4AF',
-        textColor: 'text-accent-rose-glow', 
+        textColor: 'text-accent-rose-glow',
         ringColor: 'ring-accent-rose-mid/30'
       },
       amber: {
@@ -59,9 +59,9 @@ export const TexturedAccentCard: React.FC<TexturedAccentCardProps> = ({
         ringColor: 'ring-accent-amber-mid/30'
       },
       blue: {
-        start: '#3B82F6',
-        mid: '#60A5FA',
-        glow: '#93C5FD',
+        start: '#352B6B',   // brand-dark
+        mid: '#5D41BE',     // brand-primary
+        glow: '#7B5FD9',    // versión clara
         textColor: 'text-accent-blue-glow',
         ringColor: 'ring-accent-blue-mid/30'
       }

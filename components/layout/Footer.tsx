@@ -1,9 +1,38 @@
-// components/layout/Footer.tsx - Footer accesible con información de contacto
+// components/layout/Footer.tsx - Footer accesible con información de contacto y analytics
+'use client'
 import React from 'react'
+import Link from 'next/link'
 import { TerminalLogo } from '../ui/TerminalLogo'
+import { useTranslation } from '@/lib/useTranslation'
+import { trackEvent } from '@/components/analytics/gtag'
 
 export const Footer: React.FC = () => {
   const currentYear = new Date().getFullYear()
+  const { t, locale } = useTranslation()
+
+  const handleSocialClick = (platform: string) => {
+    trackEvent('social_click', {
+      event_category: 'engagement',
+      social_platform: platform,
+      click_location: 'footer'
+    })
+  }
+
+  const handleContactClick = (contactType: 'email' | 'phone') => {
+    trackEvent('contact_click', {
+      event_category: 'conversion',
+      contact_type: contactType,
+      click_location: 'footer'
+    })
+  }
+
+  const handleNavClick = (section: string) => {
+    trackEvent('nav_click', {
+      event_category: 'navigation',
+      nav_section: section,
+      nav_location: 'footer'
+    })
+  }
 
   return (
     <footer className="bg-bg-deep border-t border-white/10 py-16">
@@ -16,12 +45,14 @@ export const Footer: React.FC = () => {
               </span>
             </div>
             <p className="text-fg-muted mb-6 max-w-md">
-              Transformamos ideas en software que impulsa el crecimiento empresarial. 
-              Equipos senior dedicados a la excelencia técnica.
+              {t('footer.description')}
             </p>
             <div className="flex space-x-4">
-              <a 
-                href="#" 
+              <a
+                href="https://linkedin.com/company/eddcode"
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={() => handleSocialClick('linkedin')}
                 className="
                   p-2 text-fg-muted hover:text-brand-primary transition-colors
                   focus:outline-none focus:ring-2 focus:ring-brand-primary/50 rounded-lg
@@ -32,8 +63,11 @@ export const Footer: React.FC = () => {
                   <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
                 </svg>
               </a>
-              <a 
-                href="#" 
+              <a
+                href="https://github.com/eddcode"
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={() => handleSocialClick('github')}
                 className="
                   p-2 text-fg-muted hover:text-brand-primary transition-colors
                   focus:outline-none focus:ring-2 focus:ring-brand-primary/50 rounded-lg
@@ -50,10 +84,42 @@ export const Footer: React.FC = () => {
           <div>
             <h3 className="text-white font-semibold mb-4">Servicios</h3>
             <ul className="space-y-2">
-              <li><a href="#servicios" className="text-fg-muted hover:text-white transition-colors focus:outline-none focus:ring-2 focus:ring-brand-primary/50 rounded px-1 py-0.5">Apps Web</a></li>
-              <li><a href="#servicios" className="text-fg-muted hover:text-white transition-colors focus:outline-none focus:ring-2 focus:ring-brand-primary/50 rounded px-1 py-0.5">APIs & Integraciones</a></li>
-              <li><a href="#servicios" className="text-fg-muted hover:text-white transition-colors focus:outline-none focus:ring-2 focus:ring-brand-primary/50 rounded px-1 py-0.5">Data & AI</a></li>
-              <li><a href="#servicios" className="text-fg-muted hover:text-white transition-colors focus:outline-none focus:ring-2 focus:ring-brand-primary/50 rounded px-1 py-0.5">DevOps & Cloud</a></li>
+              <li>
+                <a
+                  href="#servicios"
+                  onClick={() => handleNavClick('servicios_apps_web')}
+                  className="text-fg-muted hover:text-white transition-colors focus:outline-none focus:ring-2 focus:ring-brand-primary/50 rounded px-1 py-0.5"
+                >
+                  Apps Web
+                </a>
+              </li>
+              <li>
+                <a
+                  href="#servicios"
+                  onClick={() => handleNavClick('servicios_apis')}
+                  className="text-fg-muted hover:text-white transition-colors focus:outline-none focus:ring-2 focus:ring-brand-primary/50 rounded px-1 py-0.5"
+                >
+                  APIs & Integraciones
+                </a>
+              </li>
+              <li>
+                <a
+                  href="#servicios"
+                  onClick={() => handleNavClick('servicios_data_ai')}
+                  className="text-fg-muted hover:text-white transition-colors focus:outline-none focus:ring-2 focus:ring-brand-primary/50 rounded px-1 py-0.5"
+                >
+                  Data & AI
+                </a>
+              </li>
+              <li>
+                <a
+                  href="#servicios"
+                  onClick={() => handleNavClick('servicios_devops')}
+                  className="text-fg-muted hover:text-white transition-colors focus:outline-none focus:ring-2 focus:ring-brand-primary/50 rounded px-1 py-0.5"
+                >
+                  DevOps & Cloud
+                </a>
+              </li>
             </ul>
           </div>
 
@@ -61,19 +127,21 @@ export const Footer: React.FC = () => {
             <h3 className="text-white font-semibold mb-4">Contacto</h3>
             <ul className="space-y-2">
               <li>
-                <a 
-                  href="mailto:hola@eddcode.com" 
+                <a
+                  href="mailto:dramirez@eddcode.com"
+                  onClick={() => handleContactClick('email')}
                   className="text-fg-muted hover:text-white transition-colors focus:outline-none focus:ring-2 focus:ring-brand-primary/50 rounded px-1 py-0.5"
-                  aria-label="Enviar email a hola@eddcode.com"
+                  aria-label="Enviar email a dramirez@eddcode.com"
                 >
                   dramirez@eddcode.com
                 </a>
               </li>
               <li>
-                <a 
-                  href="tel:+1234567890" 
+                <a
+                  href="tel:+524775813450"
+                  onClick={() => handleContactClick('phone')}
                   className="text-fg-muted hover:text-white transition-colors focus:outline-none focus:ring-2 focus:ring-brand-primary/50 rounded px-1 py-0.5"
-                  aria-label="Llamar al +1 (234) 567-890"
+                  aria-label="Llamar al +52 477 581 3450"
                 >
                   +52 477 581 3450
                 </a>
@@ -86,21 +154,23 @@ export const Footer: React.FC = () => {
         <div className="border-t border-white/10 pt-8">
           <div className="flex flex-col md:flex-row justify-between items-center">
             <p className="text-fg-muted text-sm">
-              © {currentYear} EDDCODE. Todos los derechos reservados.
+              © {currentYear} EDDCODE. {t('footer.rights')}
             </p>
             <div className="flex space-x-6 mt-4 md:mt-0">
-              <a 
-                href="#" 
+              <Link
+                href={`/${locale}/privacy`}
+                onClick={() => handleNavClick('privacy')}
                 className="text-fg-muted hover:text-white text-sm transition-colors focus:outline-none focus:ring-2 focus:ring-brand-primary/50 rounded px-1 py-0.5"
               >
-                Privacidad
-              </a>
-              <a 
-                href="#" 
+                {locale === 'es' ? 'Privacidad' : 'Privacy'}
+              </Link>
+              <Link
+                href={`/${locale}/terms`}
+                onClick={() => handleNavClick('terms')}
                 className="text-fg-muted hover:text-white text-sm transition-colors focus:outline-none focus:ring-2 focus:ring-brand-primary/50 rounded px-1 py-0.5"
               >
-                Términos
-              </a>
+                {locale === 'es' ? 'Términos' : 'Terms'}
+              </Link>
             </div>
           </div>
         </div>

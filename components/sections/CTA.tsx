@@ -1,20 +1,39 @@
 // components/sections/CTA.tsx - Bloque final con textura y botón de contacto
+'use client'
 import React from 'react'
+import { useTranslation } from '@/lib/useTranslation'
+import { useSectionTracking } from '@/components/analytics/useAnalytics'
+import { trackCallToAction, trackEvent } from '@/components/analytics/gtag'
 
 interface CTAProps {
   onScheduleClick: () => void
 }
 
 export const CTA: React.FC<CTAProps> = ({ onScheduleClick }) => {
+  const { t, locale } = useTranslation()
+  const sectionRef = useSectionTracking('cta', 0.3)
+
   const handleWhatsAppClick = () => {
+    trackCallToAction('whatsapp', 'cta', 'secondary')
+    trackEvent('whatsapp_click', {
+      event_category: 'conversion',
+      click_location: 'cta_section'
+    })
     const phoneNumber = '524775813450' // Formato internacional con código de país para México
-    const message = 'Hola! Me interesa conocer más sobre sus servicios de desarrollo de software.'
+    const message = locale === 'es'
+      ? 'Hola! Me interesa conocer más sobre sus servicios de desarrollo de software.'
+      : 'Hi! I\'m interested in learning more about your software development services.'
     const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`
     window.open(whatsappUrl, '_blank')
   }
 
+  const handleScheduleClick = () => {
+    trackCallToAction('schedule_call', 'cta', 'primary')
+    onScheduleClick()
+  }
+
   return (
-    <section className="py-24 px-6">
+    <section ref={sectionRef} id="cta" className="py-24 px-6">
       <div className="max-w-4xl mx-auto">
         <div className="
           relative overflow-hidden rounded-3xl p-12 md:p-16 text-center
@@ -30,20 +49,19 @@ export const CTA: React.FC<CTAProps> = ({ onScheduleClick }) => {
               bg-clip-text text-transparent
               text-balance
             ">
-              Conversemos sobre tu próximo release
+              {t('cta.title')}
             </h2>
             
             <p className="
               text-lg md:text-xl text-fg-muted mb-8 max-w-2xl mx-auto
               text-balance leading-relaxed
             ">
-              Agenda una llamada de 30 minutos para explorar cómo podemos acelerar 
-              el desarrollo de tu proyecto con nuestro equipo senior.
+              {t('cta.subtitle')}
             </p>
             
             <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-              <button 
-                onClick={onScheduleClick}
+              <button
+                onClick={handleScheduleClick}
                 className="
                   px-10 py-4 bg-white text-bg-deep font-semibold rounded-xl text-lg
                   shadow-xl shadow-white/10
@@ -51,9 +69,9 @@ export const CTA: React.FC<CTAProps> = ({ onScheduleClick }) => {
                   transition-all duration-300 hover:scale-105
                   focus:outline-none focus:ring-4 focus:ring-white/30
                 "
-                aria-label="Agenda una llamada gratuita con nuestro equipo"
+                aria-label={t('cta.scheduleCall')}
               >
-                Agenda una llamada gratuita
+                {t('cta.scheduleCall')}
               </button>
               
               <button 
@@ -76,18 +94,18 @@ export const CTA: React.FC<CTAProps> = ({ onScheduleClick }) => {
               </button>
             </div>
             
-            <div className="mt-8 flex items-center justify-center gap-6 text-sm text-fg-muted">
+            <div className="mt-8 flex flex-wrap items-center justify-center gap-4 sm:gap-6 text-sm text-fg-muted">
               <div className="flex items-center gap-2">
                 <svg className="w-4 h-4 text-green-400" fill="currentColor" viewBox="0 0 20 20">
                   <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                 </svg>
-                Sin compromiso
+                {t('cta.noCommitment')}
               </div>
               <div className="flex items-center gap-2">
                 <svg className="w-4 h-4 text-green-400" fill="currentColor" viewBox="0 0 20 20">
                   <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                 </svg>
-                Respuesta en 24h
+                {t('cta.response24h')}
               </div>
             </div>
           </div>

@@ -1,7 +1,10 @@
-// components/layout/Header.tsx - Header accesible con navegación
+// components/layout/Header.tsx - Header accesible con navegación y analytics
 'use client'
 import React from 'react'
 import { TerminalLogo } from '@/components/ui/TerminalLogo'
+import { LanguageSelector } from '@/components/ui/LanguageSelector'
+import { useTranslation } from '@/lib/useTranslation'
+import { trackEvent } from '@/components/analytics/gtag'
 
 interface HeaderProps {
   onContactClick: () => void
@@ -9,11 +12,22 @@ interface HeaderProps {
 
 export const Header: React.FC<HeaderProps> = ({ onContactClick }) => {
   const [isMenuOpen, setIsMenuOpen] = React.useState(false)
+  const { t } = useTranslation()
+
+  const handleNavClick = (section: string) => {
+    trackEvent('nav_click', {
+      event_category: 'navigation',
+      nav_section: section,
+      nav_location: 'header'
+    })
+  }
 
   const navItems = [
-    { href: '#servicios', label: 'Servicios' },
-    { href: '#beneficios', label: 'Beneficios' },
-    { href: '#portafolio', label: 'Portafolio' },
+    { href: '#servicios', label: t('nav.services') },
+    { href: '#beneficios', label: t('nav.benefits') },
+    { href: '#portafolio', label: t('nav.portfolio') },
+    { href: '#testimonios', label: t('nav.testimonials') },
+    { href: '#faq', label: t('nav.faq') },
   ]
 
   return (
@@ -35,9 +49,10 @@ export const Header: React.FC<HeaderProps> = ({ onContactClick }) => {
               <a
                 key={item.href}
                 href={item.href}
+                onClick={() => handleNavClick(item.href.replace('#', ''))}
                 className="
                   text-fg-soft hover:text-white transition-colors
-                  focus:outline-none focus:ring-2 focus:ring-brand-primary/50 
+                  focus:outline-none focus:ring-2 focus:ring-brand-primary/50
                   rounded-lg px-3 py-2
                 "
                 aria-label={`Ir a sección ${item.label}`}
@@ -45,17 +60,27 @@ export const Header: React.FC<HeaderProps> = ({ onContactClick }) => {
                 {item.label}
               </a>
             ))}
-            <button 
-              onClick={onContactClick}
-              className="
-                px-6 py-2 bg-gradient-to-r from-accent-amber-start to-accent-amber-mid text-white font-medium rounded-lg
-                hover:from-accent-amber-mid hover:to-accent-amber-glow hover:shadow-lg hover:shadow-accent-amber-glow/25 transition-all duration-200
-                focus:outline-none focus:ring-2 focus:ring-accent-amber-glow/50
-              "
-              aria-label="Contactar con el equipo"
-            >
-              Contacto
-            </button>
+            <div className="flex items-center gap-4">
+              <LanguageSelector />
+              <button
+                onClick={() => {
+                  trackEvent('cta_click', {
+                    event_category: 'conversion',
+                    cta_name: 'contact_button',
+                    cta_location: 'header_desktop'
+                  })
+                  onContactClick()
+                }}
+                className="
+                  px-6 py-2 bg-gradient-to-r from-brand-dark to-brand-primary text-fg-light font-medium rounded-lg
+                  hover:from-brand-primary hover:to-accent-purple-glow hover:shadow-lg hover:shadow-brand-primary/25 transition-all duration-200
+                  focus:outline-none focus:ring-2 focus:ring-brand-primary/50
+                "
+                aria-label={t('nav.contact')}
+              >
+                {t('nav.contact')}
+              </button>
+            </div>
           </div>
 
           <button
@@ -72,9 +97,9 @@ export const Header: React.FC<HeaderProps> = ({ onContactClick }) => {
         </div>
 
         {isMenuOpen && (
-          <div 
+          <div
             id="mobile-menu"
-            className="md:hidden mt-4 py-4 border-t border-white/10"
+            className="md:hidden mt-4 py-4 border-t border-white/10 space-y-2"
           >
             {navItems.map((item) => (
               <a
@@ -82,28 +107,43 @@ export const Header: React.FC<HeaderProps> = ({ onContactClick }) => {
                 href={item.href}
                 className="
                   block px-3 py-3 text-fg-soft hover:text-white transition-colors
-                  focus:outline-none focus:ring-2 focus:ring-brand-primary/50 
+                  focus:outline-none focus:ring-2 focus:ring-brand-primary/50
                   rounded-lg
                 "
-                onClick={() => setIsMenuOpen(false)}
+                onClick={() => {
+                  handleNavClick(item.href.replace('#', ''))
+                  setIsMenuOpen(false)
+                }}
                 aria-label={`Ir a sección ${item.label}`}
               >
                 {item.label}
               </a>
             ))}
-            <button 
+
+            {/* Language selector en móvil */}
+            <div className="px-3 py-3 flex items-center justify-between">
+              <span className="text-fg-muted text-sm">{t('nav.language') || 'Idioma'}</span>
+              <LanguageSelector />
+            </div>
+
+            <button
               onClick={() => {
+                trackEvent('cta_click', {
+                  event_category: 'conversion',
+                  cta_name: 'contact_button',
+                  cta_location: 'header_mobile'
+                })
                 onContactClick()
                 setIsMenuOpen(false)
               }}
               className="
-                w-full mt-4 px-6 py-3 bg-gradient-to-r from-accent-amber-start to-accent-amber-mid text-white font-medium rounded-lg
-                hover:from-accent-amber-mid hover:to-accent-amber-glow hover:shadow-lg hover:shadow-accent-amber-glow/25 transition-all duration-200
-                focus:outline-none focus:ring-2 focus:ring-accent-amber-glow/50
+                w-full mt-2 px-6 py-3 bg-gradient-to-r from-brand-dark to-brand-primary text-fg-light font-medium rounded-lg
+                hover:from-brand-primary hover:to-accent-purple-glow hover:shadow-lg hover:shadow-brand-primary/25 transition-all duration-200
+                focus:outline-none focus:ring-2 focus:ring-brand-primary/50
               "
               aria-label="Contactar con el equipo"
             >
-              Contacto
+              {t('nav.contact')}
             </button>
           </div>
         )}

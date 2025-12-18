@@ -1,5 +1,5 @@
 'use client'
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 
 interface TypewriterProps {
   text: string
@@ -11,19 +11,30 @@ interface TypewriterProps {
 const Typewriter: React.FC<TypewriterProps> = ({ text, speed = 50, delay = 0, onComplete }) => {
   const [displayText, setDisplayText] = useState('')
   const [currentIndex, setCurrentIndex] = useState(0)
+  const [started, setStarted] = useState(false)
 
   useEffect(() => {
-    const timer = setTimeout(() => {
-      if (currentIndex < text.length) {
+    // Start delay timer
+    const startTimer = setTimeout(() => {
+      setStarted(true)
+    }, delay)
+
+    return () => clearTimeout(startTimer)
+  }, [delay])
+
+  useEffect(() => {
+    if (!started) return
+
+    if (currentIndex < text.length) {
+      const timer = setTimeout(() => {
         setDisplayText(text.slice(0, currentIndex + 1))
         setCurrentIndex(currentIndex + 1)
-      } else if (onComplete) {
-        onComplete()
-      }
-    }, currentIndex === 0 ? delay : speed)
-
-    return () => clearTimeout(timer)
-  }, [currentIndex, text, speed, delay, onComplete])
+      }, speed)
+      return () => clearTimeout(timer)
+    } else if (onComplete) {
+      onComplete()
+    }
+  }, [currentIndex, text, speed, started, onComplete])
 
   return <span>{displayText}</span>
 }
@@ -31,34 +42,57 @@ const Typewriter: React.FC<TypewriterProps> = ({ text, speed = 50, delay = 0, on
 export const ConsoleDemo: React.FC = () => {
   const [currentLine, setCurrentLine] = useState(0)
   const [showCursor, setShowCursor] = useState(true)
+  const [isVisible, setIsVisible] = useState(false)
+  const sectionRef = useRef<HTMLElement>(null)
 
+  // Delays más cortos para una animación fluida (total ~6s en vez de ~21s)
   const commands = [
-    { prompt: '$ ', command: 'npm create eddcode-app', delay: 1000 },
-    { prompt: '✨ ', command: 'Creando tu aplicación...', delay: 2000 },
-    { prompt: '📦 ', command: 'Instalando dependencias...', delay: 3000 },
-    { prompt: '🚀 ', command: 'Tu app está lista!', delay: 4000 },
-    { prompt: '$ ', command: 'npm run dev', delay: 5000 },
-    { prompt: '🔥 ', command: 'Servidor ejecutándose en http://localhost:3000', delay: 6000 }
+    { prompt: '$ ', command: 'npm create eddcode-app', delay: 200 },
+    { prompt: '✨ ', command: 'Creando tu aplicación...', delay: 100 },
+    { prompt: '📦 ', command: 'Instalando dependencias...', delay: 100 },
+    { prompt: '🚀 ', command: 'Tu app está lista!', delay: 100 },
+    { prompt: '$ ', command: 'npm run dev', delay: 200 },
+    { prompt: '🔥 ', command: 'Servidor ejecutándose en http://localhost:3000', delay: 100 }
   ]
 
+  // Solo iniciar animación cuando la sección es visible
   useEffect(() => {
+    const section = sectionRef.current
+    if (!section) return
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting && !isVisible) {
+          setIsVisible(true)
+        }
+      },
+      { threshold: 0.3 }
+    )
+
+    observer.observe(section)
+    return () => observer.disconnect()
+  }, [isVisible])
+
+  useEffect(() => {
+    if (!isVisible) return
+
     const cursorInterval = setInterval(() => {
       setShowCursor(prev => !prev)
     }, 500)
 
     return () => clearInterval(cursorInterval)
-  }, [])
+  }, [isVisible])
 
   const handleLineComplete = () => {
     setTimeout(() => {
       if (currentLine < commands.length - 1) {
         setCurrentLine(prev => prev + 1)
       }
-    }, 500)
+    }, 300) // Reducido de 500ms a 300ms
   }
 
   return (
-    <section className="py-24 px-6 relative overflow-hidden">
+    <section ref={sectionRef} className="py-24 px-6 relative overflow-hidden">
       <div className="max-w-6xl mx-auto">
         <div className="text-center mb-16">
           <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-6 bg-gradient-to-r from-white via-white to-white/70 bg-clip-text text-transparent">
@@ -86,35 +120,42 @@ export const ConsoleDemo: React.FC = () => {
             </div>
 
             {/* Terminal Content */}
-            <div className="p-6 font-mono text-sm leading-relaxed">
-              {commands.slice(0, currentLine + 1).map((line, index) => (
-                <div key={index} className="mb-2 flex items-start">
-                  <span className={`
-                    ${line.prompt === '$ ' ? 'text-green-400' : 
-                      line.prompt === '✨ ' ? 'text-purple-400' :
-                      line.prompt === '📦 ' ? 'text-blue-400' :
-                      line.prompt === '🚀 ' ? 'text-red-400' :
-                      line.prompt === '🔥 ' ? 'text-orange-400' : 'text-yellow-400'}
-                  `}>
-                    {line.prompt}
-                  </span>
-                  <span className="text-white">
-                    {index === currentLine ? (
-                      <Typewriter 
-                        text={line.command} 
-                        speed={30}
-                        delay={line.delay}
-                        onComplete={handleLineComplete}
-                      />
-                    ) : (
-                      line.command
+            <div className="p-6 font-mono text-sm leading-relaxed min-h-[180px]">
+              {isVisible ? (
+                commands.slice(0, currentLine + 1).map((line, index) => (
+                  <div key={index} className="mb-2 flex items-start">
+                    <span className={`
+                      ${line.prompt === '$ ' ? 'text-green-400' :
+                        line.prompt === '✨ ' ? 'text-purple-400' :
+                        line.prompt === '📦 ' ? 'text-blue-400' :
+                        line.prompt === '🚀 ' ? 'text-red-400' :
+                        line.prompt === '🔥 ' ? 'text-orange-400' : 'text-yellow-400'}
+                    `}>
+                      {line.prompt}
+                    </span>
+                    <span className="text-white">
+                      {index === currentLine ? (
+                        <Typewriter
+                          text={line.command}
+                          speed={25}
+                          delay={line.delay}
+                          onComplete={handleLineComplete}
+                        />
+                      ) : (
+                        line.command
+                      )}
+                    </span>
+                    {index === currentLine && (
+                      <span className={`ml-1 inline-block w-2 h-5 bg-green-400 ${showCursor ? 'opacity-100' : 'opacity-0'} transition-opacity`}></span>
                     )}
-                  </span>
-                  {index === currentLine && (
-                    <span className={`ml-1 inline-block w-2 h-5 bg-green-400 ${showCursor ? 'opacity-100' : 'opacity-0'} transition-opacity`}></span>
-                  )}
+                  </div>
+                ))
+              ) : (
+                <div className="flex items-center text-gray-500">
+                  <span className="text-green-400">$ </span>
+                  <span className="ml-1 inline-block w-2 h-5 bg-green-400 animate-pulse"></span>
                 </div>
-              ))}
+              )}
             </div>
           </div>
 

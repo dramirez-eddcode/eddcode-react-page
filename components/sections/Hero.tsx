@@ -3,6 +3,7 @@
 import React from 'react'
 import { useSectionTracking } from '@/components/analytics/useAnalytics'
 import { trackCallToAction } from '@/components/analytics/gtag'
+import { useTranslation } from '@/lib/useTranslation'
 
 interface HeroProps {
   onScheduleClick: () => void
@@ -10,9 +11,10 @@ interface HeroProps {
 
 export const Hero: React.FC<HeroProps> = ({ onScheduleClick }) => {
   const sectionRef = useSectionTracking('hero', 0.3)
+  const { t } = useTranslation()
 
   const scrollToCapabilities = () => {
-    trackCallToAction('Ver Capacidades', 'hero', 'secondary')
+    trackCallToAction(t('hero.viewCapabilities'), 'hero', 'secondary')
     const capabilitiesSection = document.getElementById('capacidades')
     if (capabilitiesSection) {
       capabilitiesSection.scrollIntoView({ behavior: 'smooth' })
@@ -20,7 +22,7 @@ export const Hero: React.FC<HeroProps> = ({ onScheduleClick }) => {
   }
 
   const handleScheduleClick = () => {
-    trackCallToAction('Agenda una llamada', 'hero', 'primary')
+    trackCallToAction(t('hero.scheduleCall'), 'hero', 'primary')
     onScheduleClick()
   }
 
@@ -48,9 +50,9 @@ export const Hero: React.FC<HeroProps> = ({ onScheduleClick }) => {
             text-balance leading-tight mb-8
             text-fg-strong
           ">
-            Entornos seguros y veloces para tus desarrollos{' '}
-            <span className="bg-gradient-to-r from-accent-blue via-accent-purple to-accent-cyan bg-clip-text text-transparent">
-              — y tus agentes de IA
+            {t('hero.title')}{' '}
+            <span className="bg-gradient-to-r from-brand-light via-brand-primary to-accent-purple-glow bg-clip-text text-transparent">
+              {t('hero.titleHighlight')}
             </span>
           </h1>
           
@@ -59,27 +61,26 @@ export const Hero: React.FC<HeroProps> = ({ onScheduleClick }) => {
             text-fg-soft max-w-4xl mx-auto mb-12
             text-balance leading-relaxed
           ">
-            Equipos senior especializados en desarrollo de software moderno, 
-            integraciones seguras y automatización inteligente para empresas que buscan escalar.
+            {t('hero.description')}
           </p>
           
           {/* CTAs principales */}
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-16">
-            <button 
+            <button
               onClick={handleScheduleClick}
               className="
-                px-10 py-4 text-white font-semibold rounded-xl text-lg
-                bg-gradient-to-r from-accent-blue-start to-accent-blue-mid
+                px-10 py-4 text-fg-light font-semibold rounded-xl text-lg
+                bg-gradient-to-r from-brand-dark to-brand-primary
                 ring-1 ring-white/10 backdrop-accent
-                shadow-[0_0_30px_-8px_var(--accent-blue-mid)]
-                hover:shadow-[0_0_40px_-8px_var(--accent-blue-mid)] hover:scale-105
-                hover:ring-white/20 hover:from-accent-blue-mid hover:to-accent-blue-glow
+                shadow-[0_0_30px_-8px_var(--brand-primary)]
+                hover:shadow-[0_0_40px_-8px_var(--brand-primary)] hover:scale-105
+                hover:ring-white/20 hover:from-brand-primary hover:to-accent-purple-glow
                 transition-all duration-300
-                focus:outline-none focus:ring-4 focus:ring-accent-blue-mid/30
+                focus:outline-none focus:ring-4 focus:ring-brand-primary/30
               "
-              aria-label="Agenda una llamada estratégica con nuestro equipo"
+              aria-label={t('hero.scheduleCall')}
             >
-              Agenda una llamada
+              {t('hero.scheduleCall')}
             </button>
             
             <button 
@@ -92,9 +93,9 @@ export const Hero: React.FC<HeroProps> = ({ onScheduleClick }) => {
                 transition-all duration-300
                 focus:outline-none focus:ring-4 focus:ring-white/20
               "
-              aria-label="Explorar nuestras capacidades técnicas"
+              aria-label={t('hero.viewCapabilities')}
             >
-              Ver capacidades
+              {t('hero.viewCapabilities')}
             </button>
           </div>
 

@@ -1,43 +1,10 @@
-// app/layout.tsx - Layout principal con metadata y estructura HTML
-import type { Metadata } from 'next'
-import { metadata } from './metadata'
-import { organizationSchema, websiteSchema, breadcrumbSchema } from './schema'
-import { GoogleAnalytics } from '@/components/analytics/GoogleAnalytics'
-import { Analytics } from '@vercel/analytics/next'
+// app/layout.tsx - Root layout
 import './globals.css'
-
-export { metadata }
 
 export default function RootLayout({
   children,
 }: {
   children: React.ReactNode
 }) {
-  return (
-    <html lang="es" className="scroll-smooth">
-      <head>
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <meta name="theme-color" content="#1a1633" />
-        <link rel="icon" type="image/png" href="/favicon.png" />
-        <link rel="shortcut icon" href="/favicon.png" />
-        <link rel="apple-touch-icon" href="/favicon.png" />
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{
-            __html: JSON.stringify({
-              "@context": "https://schema.org",
-              "@graph": [organizationSchema, websiteSchema, breadcrumbSchema]
-            })
-          }}
-        />
-      </head>
-      <body className="antialiased selection:bg-brand-primary/30 selection:text-white">
-        <GoogleAnalytics />
-        <Analytics />
-        {children}
-      </body>
-    </html>
-  )
+  return children
 }

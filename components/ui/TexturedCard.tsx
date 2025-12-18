@@ -1,20 +1,24 @@
 // components/ui/TexturedCard.tsx - Tarjetas con gradientes, ruido y variantes de colores
 import React from 'react'
 
-interface TexturedCardProps {
+export interface TexturedCardProps {
   children: React.ReactNode
   className?: string
   variant?: 'default' | 'blue' | 'purple' | 'cyan' | 'warm'
   hoverable?: boolean
   style?: React.CSSProperties
+  onClick?: () => void
+  onMouseEnter?: () => void
 }
 
-export const TexturedCard: React.FC<TexturedCardProps> = ({ 
-  children, 
-  className = '', 
+export const TexturedCard: React.FC<TexturedCardProps> = ({
+  children,
+  className = '',
   variant = 'default',
   hoverable = true,
-  style
+  style,
+  onClick,
+  onMouseEnter
 }) => {
   const baseClasses = `
     relative overflow-hidden rounded-2xl p-8 
@@ -40,10 +44,12 @@ export const TexturedCard: React.FC<TexturedCardProps> = ({
   }
 
   return (
-    <div 
+    <div
       className={`${baseClasses} ${getVariantClasses()} ${className}`}
       style={style}
       role="article"
+      onClick={onClick}
+      onMouseEnter={onMouseEnter}
     >
       {children}
     </div>

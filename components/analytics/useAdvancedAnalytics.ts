@@ -148,7 +148,14 @@ export const useRageClickTracking = () => {
   useEffect(() => {
     const handleClick = (event: MouseEvent) => {
       const target = event.target as Element
-      const elementInfo = `${target.tagName.toLowerCase()}${target.className ? '.' + target.className.split(' ')[0] : ''}`
+      // className puede ser SVGAnimatedString en elementos SVG, así que usamos toString()
+      let className = ''
+      if (typeof target.className === 'string') {
+        className = target.className
+      } else if (target.className && typeof (target.className as SVGAnimatedString).baseVal === 'string') {
+        className = (target.className as SVGAnimatedString).baseVal
+      }
+      const elementInfo = `${target.tagName.toLowerCase()}${className ? '.' + className.split(' ')[0] : ''}`
       
       const now = Date.now()
       clicksRef.current.push({ timestamp: now, element: elementInfo })

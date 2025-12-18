@@ -1,0 +1,21 @@
+{
+  "name": "EDDCODE - Desarrollo de Software Profesional",
+  "short_name": "EDDCODE",
+  "description": "Desarrollo de software a medida. Apps web, APIs, integraciones y soluciones de IA.",
+  "start_url": "/es",
+  "display": "standalone",
+  "background_color": "#0F1117",
+  "theme_color": "#5D41BE",
+  "orientation": "portrait-primary",
+  "scope": "/",
+  "lang": "es-MX",
+  "categories": ["business", "productivity", "utilities"],
+  "icons": [
+    {
+      "src": "/favicon.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
