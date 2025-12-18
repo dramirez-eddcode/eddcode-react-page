@@ -1,134 +1,78 @@
 // middleware.ts - Detección automática de idioma basada en la región del visitante
+// Next.js middleware se ejecuta automáticamente en Edge Runtime
 import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
 
 // Idiomas soportados
-const locales = ['es', 'en']
+const locales = ['es', 'en'] as const
 const defaultLocale = 'es'
 
-// Países de habla hispana (códigos ISO 3166-1 alpha-2)
-const spanishSpeakingCountries = [
-  'ES', // España
-  'MX', // México
-  'AR', // Argentina
-  'CO', // Colombia
-  'PE', // Perú
-  'VE', // Venezuela
-  'CL', // Chile
-  'EC', // Ecuador
-  'GT', // Guatemala
-  'CU', // Cuba
-  'BO', // Bolivia
-  'DO', // República Dominicana
-  'HN', // Honduras
-  'PY', // Paraguay
-  'SV', // El Salvador
-  'NI', // Nicaragua
-  'CR', // Costa Rica
-  'PA', // Panamá
-  'UY', // Uruguay
-  'PR', // Puerto Rico
-  'GQ', // Guinea Ecuatorial
-]
+// Set de países hispanohablantes para búsqueda O(1)
+const spanishSpeakingCountries = new Set([
+  'ES', 'MX', 'AR', 'CO', 'PE', 'VE', 'CL', 'EC', 'GT', 'CU',
+  'BO', 'DO', 'HN', 'PY', 'SV', 'NI', 'CR', 'PA', 'UY', 'PR', 'GQ'
+])
 
 function getLocaleFromHeaders(request: NextRequest): string {
-  // 1. Primero verificar si hay una preferencia guardada en cookie
+  // 1. Cookie check - más rápido primero
   const savedLocale = request.cookies.get('NEXT_LOCALE')?.value
-  if (savedLocale && locales.includes(savedLocale)) {
+  if (savedLocale === 'es' || savedLocale === 'en') {
     return savedLocale
   }
 
-  // 2. Intentar detectar por país usando headers de CDN (Vercel/Cloudflare)
-  const country = request.headers.get('x-vercel-ip-country') ||
-                  request.headers.get('cf-ipcountry')
-
+  // 2. Detección por país (headers de Vercel Edge)
+  const country = request.headers.get('x-vercel-ip-country')
   if (country) {
-    if (spanishSpeakingCountries.includes(country.toUpperCase())) {
-      return 'es'
-    }
-    // Si no es país hispanohablante, usar inglés
-    return 'en'
+    return spanishSpeakingCountries.has(country.toUpperCase()) ? 'es' : 'en'
   }
 
-  // 3. Fallback: detectar por el header Accept-Language del navegador
+  // 3. Accept-Language simplificado (sin sort para mayor velocidad)
   const acceptLanguage = request.headers.get('accept-language')
   if (acceptLanguage) {
-    // Parsear el header Accept-Language (ej: "es-MX,es;q=0.9,en;q=0.8")
-    const languages = acceptLanguage.split(',').map(lang => {
-      const [code, priority] = lang.trim().split(';q=')
-      return {
-        code: code.split('-')[0].toLowerCase(), // Tomar solo el código de idioma principal
-        priority: priority ? parseFloat(priority) : 1
-      }
-    }).sort((a, b) => b.priority - a.priority)
-
-    // Buscar el primer idioma soportado
-    for (const lang of languages) {
-      if (locales.includes(lang.code)) {
-        return lang.code
-      }
-    }
+    // Buscar 'es' o 'en' directamente en el string
+    const lowerLang = acceptLanguage.toLowerCase()
+    if (lowerLang.startsWith('es') || lowerLang.includes(',es')) return 'es'
+    if (lowerLang.startsWith('en') || lowerLang.includes(',en')) return 'en'
   }
 
-  // 4. Fallback final: español por defecto
   return defaultLocale
 }
 
 export function middleware(request: NextRequest) {
   const pathname = request.nextUrl.pathname
 
-  // Ignorar archivos estáticos, API routes y archivos de SEO
+  // Fast path: ya tiene locale - no hacer nada
+  if (pathname.startsWith('/es') || pathname.startsWith('/en')) {
+    return NextResponse.next()
+  }
+
+  // Fast path: archivos estáticos y rutas especiales
   if (
     pathname.startsWith('/_next') ||
     pathname.startsWith('/api') ||
-    pathname.startsWith('/static') ||
     pathname === '/sitemap.xml' ||
     pathname === '/robots.txt' ||
-    pathname.includes('.') // archivos con extensión
+    pathname.includes('.')
   ) {
     return NextResponse.next()
   }
 
-  // Permitir a los crawlers acceder sin redirección
-  const userAgent = request.headers.get('user-agent')?.toLowerCase() || ''
-  const isBot = userAgent.includes('googlebot') ||
-                userAgent.includes('bingbot') ||
-                userAgent.includes('yandex') ||
-                userAgent.includes('duckduckbot') ||
-                userAgent.includes('slurp') ||
-                userAgent.includes('facebookexternalhit') ||
-                userAgent.includes('twitterbot') ||
-                userAgent.includes('linkedinbot') ||
-                userAgent.includes('crawler') ||
-                userAgent.includes('spider')
+  // Detección de bots simplificada
+  const userAgent = request.headers.get('user-agent') || ''
+  const isBot = /bot|crawl|spider|slurp|facebook|twitter|linkedin/i.test(userAgent)
 
-  // Si es un bot y está en la raíz, redirigir a /es para contenido indexable
+  // Bots van a /es directamente
   if (isBot && pathname === '/') {
-    const url = request.nextUrl.clone()
-    url.pathname = '/es'
-    return NextResponse.redirect(url, 301) // Redirect permanente para SEO
+    return NextResponse.redirect(new URL('/es', request.url), 301)
   }
 
-  // Verificar si ya hay un locale en la URL
-  const pathnameHasLocale = locales.some(
-    locale => pathname.startsWith(`/${locale}/`) || pathname === `/${locale}`
-  )
+  // Detectar locale y redirigir
+  const locale = getLocaleFromHeaders(request)
+  const newPath = `/${locale}${pathname === '/' ? '' : pathname}`
 
-  if (pathnameHasLocale) {
-    return NextResponse.next()
-  }
-
-  // Detectar el locale apropiado
-  const detectedLocale = getLocaleFromHeaders(request)
-
-  // Redirigir a la URL con el locale detectado
-  const url = request.nextUrl.clone()
-  url.pathname = `/${detectedLocale}${pathname === '/' ? '' : pathname}`
-
-  // Guardar la preferencia en una cookie para futuras visitas
-  const response = NextResponse.redirect(url)
-  response.cookies.set('NEXT_LOCALE', detectedLocale, {
-    maxAge: 60 * 60 * 24 * 365, // 1 año
+  const response = NextResponse.redirect(new URL(newPath, request.url))
+  response.cookies.set('NEXT_LOCALE', locale, {
+    maxAge: 31536000, // 1 año en segundos
     path: '/',
     sameSite: 'lax'
   })
