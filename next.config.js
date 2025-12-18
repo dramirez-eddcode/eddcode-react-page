@@ -11,6 +11,8 @@ const nextConfig = {
   experimental: {
     // Optimizar imports de paquetes grandes
     optimizePackageImports: ['@vercel/analytics', '@vercel/speed-insights'],
+    // Optimizar CSS - inline critical CSS automáticamente
+    optimizeCss: true,
   },
 
   // Configuración del compilador para optimización
