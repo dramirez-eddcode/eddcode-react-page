@@ -1,7 +1,6 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "framework": "nextjs",
-  "regions": ["iad1", "sfo1"],
   "headers": [
     {
       "source": "/(.*)",
@@ -26,7 +25,16 @@
       ]
     },
     {
-      "source": "/:locale(es|en)",
+      "source": "/es",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, s-maxage=3600, stale-while-revalidate=86400"
+        }
+      ]
+    },
+    {
+      "source": "/en",
       "headers": [
         {
           "key": "Cache-Control",
