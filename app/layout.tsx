@@ -1,4 +1,5 @@
 // app/layout.tsx - Root layout
+import { SpeedInsights } from '@vercel/speed-insights/next'
 import './globals.css'
 
 export default function RootLayout({
@@ -6,5 +7,13 @@ export default function RootLayout({
 }: {
   children: React.ReactNode
 }) {
-  return children
+  return (
+    <html>
+      <head />
+      <body>
+        {children}
+        <SpeedInsights />
+      </body>
+    </html>
+  )
 }
