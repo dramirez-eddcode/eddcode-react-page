@@ -163,6 +163,13 @@ export const translations = {
           metric: '+5,000 vuelos',
           metricLabel: 'completados'
         },
+        jetset: {
+          title: 'Jetset Transfers Cancún',
+          description: 'Servicio premium de transfers y transportación privada en Cancún y Riviera Maya. Sistema de reservas online, cotizador automático y gestión de flotas con seguimiento en tiempo real.',
+          tags: 'Next.js,TypeScript,SEO,Booking',
+          metric: '+8,000 transfers',
+          metricLabel: 'realizados'
+        },
         financehub: {
           title: 'FinanceHub MX',
           description: 'Dashboard financiero empresarial con integración a bancos mexicanos, reportes automáticos y análisis predictivo de flujo de caja.',
@@ -441,6 +448,13 @@ export const translations = {
           description: 'Private flights and panoramic air tours platform in Cancún and Riviera Maya. Real-time availability booking system, multilingual support and SEO optimization.',
           tags: 'Next.js,TypeScript,SEO,i18n',
           metric: '+5,000 flights',
+          metricLabel: 'completed'
+        },
+        jetset: {
+          title: 'Jetset Transfers Cancún',
+          description: 'Premium transfer and private transportation service in Cancún and Riviera Maya. Online booking system, automatic quote calculator and fleet management with real-time tracking.',
+          tags: 'Next.js,TypeScript,SEO,Booking',
+          metric: '+8,000 transfers',
           metricLabel: 'completed'
         },
         financehub: {

@@ -71,6 +71,15 @@ export const Portafolio: React.FC = () => {
       fallbackGradient: 'from-sky-900 via-blue-800 to-cyan-700'
     },
     {
+      id: 'jetset',
+      url: 'https://www.jetsetcancun.com',
+      image: '/portfolio/jetset.jpg',
+      deliveryTime: 2,
+      featured: true,
+      waveColor: 'rgba(251, 191, 36, 0.3)',
+      fallbackGradient: 'from-amber-900 via-yellow-800 to-orange-700'
+    },
+    {
       id: 'financehub',
       url: '#',
       image: '/portfolio/financehub.jpg',
