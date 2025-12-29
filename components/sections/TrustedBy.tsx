@@ -16,6 +16,7 @@ export const TrustedBy: React.FC = () => {
 
   const clients: Client[] = [
     { name: 'Vuelatour', industry: 'Turismo' },
+    { name: 'Jetset', industry: 'Transporte' },
     { name: 'FinanceHub MX', industry: 'Fintech' },
     { name: 'DeliverYa', industry: 'Logística' },
     { name: 'LogiTrack', industry: 'Supply Chain' },

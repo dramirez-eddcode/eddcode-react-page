@@ -76,8 +76,8 @@ export const Portafolio: React.FC = () => {
       image: '/portfolio/jetset.jpg',
       deliveryTime: 2,
       featured: true,
-      waveColor: 'rgba(251, 191, 36, 0.3)',
-      fallbackGradient: 'from-amber-900 via-yellow-800 to-orange-700'
+      waveColor: 'rgba(239, 68, 68, 0.3)',
+      fallbackGradient: 'from-red-900 via-rose-800 to-orange-700'
     },
     {
       id: 'financehub',
