@@ -5,10 +5,12 @@ import { TexturedCard } from '../ui/TexturedCard'
 import { useTranslation } from '@/lib/useTranslation'
 import { useSectionTracking } from '@/components/analytics/useAnalytics'
 import { trackEvent } from '@/components/analytics/gtag'
+import { PromoContactForm } from '../ui/PromoContactForm'
 
 interface Testimonial {
   id: string
   rating: number
+  isPromo?: boolean
 }
 
 const StarRating: React.FC<{ rating: number }> = ({ rating }) => (
@@ -31,14 +33,27 @@ export const Testimonios: React.FC = () => {
   const { t } = useTranslation()
   const sectionRef = useSectionTracking('testimonios', 0.3)
   const [activeIndex, setActiveIndex] = useState(0)
+  const [isPromoFormOpen, setIsPromoFormOpen] = useState(false)
+  const [selectedSlot, setSelectedSlot] = useState<number | null>(null)
 
+  // 2 clientes reales + 3 slots promocionales
   const testimonials: Testimonial[] = [
-    { id: 'carlos', rating: 5 },
-    { id: 'maria', rating: 5 },
-    { id: 'roberto', rating: 5 },
-    { id: 'ana', rating: 5 },
-    { id: 'fernando', rating: 5 },
+    { id: 'vuelatour', rating: 5 },
+    { id: 'jetset', rating: 5 },
+    { id: 'promo1', rating: 5, isPromo: true },
+    { id: 'promo2', rating: 5, isPromo: true },
+    { id: 'promo3', rating: 5, isPromo: true },
   ]
+
+  const handlePromoClick = (slotNumber: number) => {
+    setSelectedSlot(slotNumber)
+    setIsPromoFormOpen(true)
+    trackEvent('promo_slot_click', {
+      event_category: 'testimonials',
+      slot_number: slotNumber,
+      discount: '25%'
+    })
+  }
 
   // Auto-rotate testimonials
   useEffect(() => {
@@ -85,50 +100,91 @@ export const Testimonios: React.FC = () => {
 
         {/* Featured Testimonial */}
         <div className="max-w-4xl mx-auto mb-12">
-          <TexturedCard variant="purple" className="p-8 md:p-12">
-            <div className="flex flex-col md:flex-row gap-8 items-start">
-              {/* Avatar */}
-              <div className="flex-shrink-0">
-                <div className="w-20 h-20 rounded-full bg-gradient-to-br from-brand-primary to-accent-purple-glow flex items-center justify-center text-3xl font-bold text-white">
-                  {String(t(`testimonials.items.${testimonials[activeIndex].id}.name`)).charAt(0)}
+          {testimonials[activeIndex].isPromo ? (
+            // Slot promocional
+            <TexturedCard variant="default" className="p-8 md:p-12">
+              <div className="flex flex-col md:flex-row gap-8 items-center">
+                {/* Promo Icon */}
+                <div className="flex-shrink-0">
+                  <div className="w-20 h-20 rounded-full bg-gradient-to-br from-green-500 to-emerald-600 flex items-center justify-center">
+                    <svg className="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+                    </svg>
+                  </div>
+                </div>
+
+                {/* Promo Content */}
+                <div className="flex-1 text-center md:text-left">
+                  <div className="flex justify-center md:justify-start mb-4">
+                    <span className="px-4 py-2 text-sm font-bold rounded-full bg-gradient-to-r from-green-500/20 to-emerald-500/20 text-green-400 ring-1 ring-green-500/30 animate-pulse">
+                      25% {t('testimonials.promo.discount')}
+                    </span>
+                  </div>
+
+                  <h3 className="text-2xl md:text-3xl font-bold text-white mb-4">
+                    {t('testimonials.promo.title')}
+                  </h3>
+
+                  <p className="text-lg text-fg-soft leading-relaxed mb-6">
+                    {t('testimonials.promo.description')}
+                  </p>
+
+                  <button
+                    onClick={() => handlePromoClick(activeIndex - 1)}
+                    className="px-8 py-3 rounded-lg font-medium bg-gradient-to-r from-green-500 to-emerald-600 text-white hover:from-green-600 hover:to-emerald-700 hover:shadow-lg hover:shadow-green-500/25 transition-all duration-200"
+                  >
+                    {t('testimonials.promo.cta')}
+                  </button>
                 </div>
               </div>
+            </TexturedCard>
+          ) : (
+            // Testimonial real
+            <TexturedCard variant="purple" className="p-8 md:p-12">
+              <div className="flex flex-col md:flex-row gap-8 items-start">
+                {/* Avatar */}
+                <div className="flex-shrink-0">
+                  <div className="w-20 h-20 rounded-full bg-gradient-to-br from-brand-primary to-accent-purple-glow flex items-center justify-center text-3xl font-bold text-white">
+                    {String(t(`testimonials.items.${testimonials[activeIndex].id}.name`)).charAt(0)}
+                  </div>
+                </div>
 
-              {/* Content */}
-              <div className="flex-1">
-                <StarRating rating={testimonials[activeIndex].rating} />
+                {/* Content */}
+                <div className="flex-1">
+                  <StarRating rating={testimonials[activeIndex].rating} />
 
-                <blockquote className="mt-4 text-lg md:text-xl text-fg-soft leading-relaxed italic">
-                  "{t(`testimonials.items.${testimonials[activeIndex].id}.quote`)}"
-                </blockquote>
+                  <blockquote className="mt-4 text-lg md:text-xl text-fg-soft leading-relaxed italic">
+                    &ldquo;{t(`testimonials.items.${testimonials[activeIndex].id}.quote`)}&rdquo;
+                  </blockquote>
 
-                <div className="mt-6">
-                  <p className="font-semibold text-white">
-                    {t(`testimonials.items.${testimonials[activeIndex].id}.name`)}
-                  </p>
-                  <p className="text-fg-muted text-sm">
-                    {t(`testimonials.items.${testimonials[activeIndex].id}.role`)} · {t(`testimonials.items.${testimonials[activeIndex].id}.company`)}
-                  </p>
+                  <div className="mt-6">
+                    <p className="font-semibold text-white">
+                      {t(`testimonials.items.${testimonials[activeIndex].id}.name`)}
+                    </p>
+                    <p className="text-fg-muted text-sm">
+                      {t(`testimonials.items.${testimonials[activeIndex].id}.role`)} · {t(`testimonials.items.${testimonials[activeIndex].id}.company`)}
+                    </p>
+                  </div>
                 </div>
               </div>
-            </div>
-          </TexturedCard>
+            </TexturedCard>
+          )}
         </div>
 
         {/* Navigation Dots */}
         <div className="flex justify-center gap-3 mb-12">
-          {testimonials.map((_, index) => (
+          {testimonials.map((testimonial, index) => (
             <button
               key={index}
               onClick={() => handleTestimonialChange(index)}
               className={`
                 w-3 h-3 rounded-full transition-all duration-300
                 ${index === activeIndex
-                  ? 'bg-brand-primary w-8'
-                  : 'bg-white/20 hover:bg-white/40'
+                  ? testimonial.isPromo ? 'bg-green-500 w-8' : 'bg-brand-primary w-8'
+                  : testimonial.isPromo ? 'bg-green-500/30 hover:bg-green-500/50' : 'bg-white/20 hover:bg-white/40'
                 }
               `}
-              aria-label={`Ver testimonio ${index + 1}`}
+              aria-label={testimonial.isPromo ? `Ver promoción ${index - 1}` : `Ver testimonio ${index + 1}`}
             />
           ))}
         </div>
@@ -153,6 +209,16 @@ export const Testimonios: React.FC = () => {
           </div>
         </div>
       </div>
+
+      {/* Formulario de contacto promocional */}
+      <PromoContactForm
+        isOpen={isPromoFormOpen}
+        onClose={() => {
+          setIsPromoFormOpen(false)
+          setSelectedSlot(null)
+        }}
+        slotNumber={selectedSlot}
+      />
     </section>
   )
 }

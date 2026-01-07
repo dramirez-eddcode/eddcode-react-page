@@ -9,7 +9,9 @@ import {
   getWebsiteSchema,
   getBreadcrumbSchema,
   getFAQSchema,
-  getSoftwareApplicationSchema
+  getSoftwareApplicationSchema,
+  getReviewSchema,
+  getPortfolioSchema
 } from '../schema'
 import { GoogleAnalytics } from '@/components/analytics/GoogleAnalytics'
 import { WebVitalsReporter } from '@/components/analytics/WebVitalsReporter'
@@ -51,6 +53,8 @@ export default async function LocaleLayout({
   const breadcrumbSchema = getBreadcrumbSchema(locale)
   const faqSchema = getFAQSchema(locale)
   const softwareSchema = getSoftwareApplicationSchema(locale)
+  const reviewSchema = getReviewSchema(locale)
+  const portfolioSchema = getPortfolioSchema(locale)
 
   return (
     <html lang={locale === 'es' ? 'es-MX' : 'en-US'} className={`scroll-smooth ${inter.variable}`}>
@@ -134,6 +138,22 @@ export default async function LocaleLayout({
           type="application/ld+json"
           dangerouslySetInnerHTML={{
             __html: JSON.stringify(faqSchema)
+          }}
+        />
+
+        {/* Structured Data - Reviews/Testimonials */}
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify(reviewSchema)
+          }}
+        />
+
+        {/* Structured Data - Portfolio/CreativeWork */}
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify(portfolioSchema)
           }}
         />
       </head>

@@ -9,7 +9,11 @@ interface FAQItem {
   id: string
 }
 
-export const FAQ: React.FC = () => {
+interface FAQProps {
+  onContactClick?: () => void
+}
+
+export const FAQ: React.FC<FAQProps> = ({ onContactClick }) => {
   const { t } = useTranslation()
   const sectionRef = useSectionTracking('faq', 0.3)
   const [openIndex, setOpenIndex] = useState<number | null>(0)
@@ -133,8 +137,8 @@ export const FAQ: React.FC = () => {
           <p className="text-fg-muted mb-4">
             {t('faq.moreQuestions')}
           </p>
-          <a
-            href="#contacto"
+          <button
+            onClick={onContactClick}
             className="
               inline-flex items-center gap-2 text-[#A78BFA] hover:text-white
               transition-colors font-medium underline underline-offset-2
@@ -144,7 +148,7 @@ export const FAQ: React.FC = () => {
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
             </svg>
-          </a>
+          </button>
         </div>
       </div>
     </section>

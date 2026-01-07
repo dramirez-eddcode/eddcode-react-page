@@ -101,17 +101,25 @@ export const Hero: React.FC<HeroProps> = ({ onScheduleClick }) => {
 
           {/* Indicador de scroll sutil */}
           <div className="flex justify-center">
-            <div className="animate-bounce">
-              <svg 
-                className="w-6 h-6 text-fg-muted" 
-                fill="none" 
-                stroke="currentColor" 
+            <button
+              onClick={() => {
+                const trustedBySection = document.getElementById('trusted-by')
+                if (trustedBySection) {
+                  trustedBySection.scrollIntoView({ behavior: 'smooth' })
+                }
+              }}
+              className="animate-bounce cursor-pointer hover:text-brand-primary transition-colors focus:outline-none focus:ring-2 focus:ring-brand-primary/50 rounded-full p-2"
+              aria-label="Scroll hacia abajo"
+            >
+              <svg
+                className="w-6 h-6 text-fg-muted hover:text-brand-primary transition-colors"
+                fill="none"
+                stroke="currentColor"
                 viewBox="0 0 24 24"
-                aria-hidden="true"
               >
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 14l-7 7m0 0l-7-7m7 7V3" />
               </svg>
-            </div>
+            </button>
           </div>
         </div>
       </div>

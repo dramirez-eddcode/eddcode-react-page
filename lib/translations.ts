@@ -113,36 +113,24 @@ export const translations = {
         satisfaction: 'Clientes satisfechos',
         years: 'Años de experiencia'
       },
+      promo: {
+        discount: 'de descuento',
+        title: 'Tu testimonio podría estar aquí',
+        description: 'Sé de los primeros clientes en confiar en nosotros y obtén un 25% de descuento exclusivo en tu proyecto. Tu historia de éxito merece ser contada.',
+        cta: 'Obtener 25% de descuento'
+      },
       items: {
-        carlos: {
+        vuelatour: {
           name: 'Carlos Mendoza',
           role: 'CEO',
           company: 'Vuelatour',
           quote: 'EDDCODE transformó nuestra visión en realidad. En solo una semana teníamos una plataforma de reservas funcionando perfectamente. Su equipo entendió exactamente lo que necesitábamos y la comunicación fue excepcional durante todo el proceso.'
         },
-        maria: {
-          name: 'María González',
-          role: 'Directora de Tecnología',
-          company: 'FinanceHub MX',
-          quote: 'Necesitábamos integrar múltiples sistemas legacy con una nueva plataforma. EDDCODE no solo lo logró, sino que mejoró el rendimiento en un 300%. Su expertise en APIs y arquitectura es impresionante.'
-        },
-        roberto: {
-          name: 'Roberto Sánchez',
-          role: 'Fundador',
-          company: 'DeliverYa',
-          quote: 'Como startup, cada peso cuenta. EDDCODE nos entregó una app de delivery que compite con las grandes del mercado, a una fracción del costo. El soporte post-lanzamiento ha sido invaluable.'
-        },
-        ana: {
-          name: 'Ana Martínez',
-          role: 'VP de Operaciones',
-          company: 'LogiTrack',
-          quote: 'Implementaron un sistema de tracking en tiempo real que redujo nuestros tiempos de entrega en 40%. El equipo es profesional, puntual y siempre disponible para resolver cualquier duda.'
-        },
-        fernando: {
-          name: 'Fernando López',
+        jetset: {
+          name: 'Luis Hernández',
           role: 'Director General',
-          company: 'MediCare Plus',
-          quote: 'La plataforma de telemedicina que desarrollaron cumple con todas las regulaciones de salud y es increíblemente fácil de usar. Nuestros doctores y pacientes la adoptaron inmediatamente.'
+          company: 'Jetset Transfers',
+          quote: 'Necesitábamos un sistema de reservas robusto y profesional. EDDCODE entregó una solución que superó nuestras expectativas en solo una semana. El cotizador automático y el seguimiento en tiempo real han transformado nuestras operaciones.'
         }
       }
     },
@@ -155,6 +143,14 @@ export const translations = {
       deliveredIn: 'Entregado en',
       week: 'semana',
       weeks: 'semanas',
+      promo: {
+        yourProject: 'Tu proyecto aquí',
+        discount: 'descuento',
+        available: 'Disponible',
+        title: 'Sé de los primeros',
+        description: 'Reserva este espacio para tu proyecto y obtén un 25% de descuento exclusivo. Cuéntanos tu idea y la hacemos realidad.',
+        cta: 'Reservar con descuento'
+      },
       projects: {
         vuelatour: {
           title: 'Vuelatour',
@@ -169,36 +165,41 @@ export const translations = {
           tags: 'Next.js,TypeScript,SEO,Booking',
           metric: '+8,000 transfers',
           metricLabel: 'realizados'
-        },
-        financehub: {
-          title: 'FinanceHub MX',
-          description: 'Dashboard financiero empresarial con integración a bancos mexicanos, reportes automáticos y análisis predictivo de flujo de caja.',
-          tags: 'React,Node.js,PostgreSQL,APIs Bancarias',
-          metric: '$2M USD',
-          metricLabel: 'procesados mensualmente'
-        },
-        deliverya: {
-          title: 'DeliverYa',
-          description: 'App de delivery con tracking en tiempo real, sistema de pagos integrado y algoritmo de optimización de rutas.',
-          tags: 'React Native,Firebase,Google Maps,Stripe',
-          metric: '+10,000',
-          metricLabel: 'entregas mensuales'
-        },
-        logitrack: {
-          title: 'LogiTrack',
-          description: 'Sistema de gestión logística con tracking GPS, optimización de rutas y reportes de rendimiento en tiempo real.',
-          tags: 'Next.js,Python,TensorFlow,AWS',
-          metric: '-40%',
-          metricLabel: 'tiempo de entrega'
-        },
-        medicare: {
-          title: 'MediCare Plus',
-          description: 'Plataforma de telemedicina con videoconsultas, expediente electrónico y sistema de citas que cumple regulaciones de salud.',
-          tags: 'React,WebRTC,Node.js,HIPAA',
-          metric: '+15,000',
-          metricLabel: 'consultas realizadas'
         }
       }
+    },
+
+    // Promo Form
+    promoForm: {
+      discountBadge: 'de descuento exclusivo',
+      title: 'Reserva tu espacio con 25% de descuento',
+      subtitle: 'Cuéntanos sobre tu proyecto y te contactaremos con una cotización especial.',
+      name: 'Nombre',
+      namePlaceholder: 'Tu nombre completo',
+      company: 'Empresa',
+      companyPlaceholder: 'Nombre de tu empresa',
+      email: 'Email',
+      phone: 'Teléfono',
+      projectType: 'Tipo de proyecto',
+      selectProjectType: 'Selecciona el tipo de proyecto',
+      projectTypes: {
+        landing: 'Landing Page / Sitio Web',
+        webapp: 'Aplicación Web',
+        ecommerce: 'E-commerce / Tienda Online',
+        api: 'API / Integración de Sistemas',
+        mobile: 'Aplicación Móvil',
+        other: 'Otro'
+      },
+      message: 'Describe tu proyecto',
+      messagePlaceholder: 'Cuéntanos qué necesitas: funcionalidades, objetivos, referencias de diseño...',
+      discountInfo: 'Al enviar este formulario, tu proyecto aplica automáticamente para el 25% de descuento sobre la cotización final.',
+      sending: 'Enviando...',
+      submit: 'Solicitar cotización con descuento',
+      successTitle: '¡Solicitud enviada!',
+      successMessage: 'Hemos recibido tu solicitud. Te contactaremos en las próximas 24 horas.',
+      successDiscount: 'Tu descuento del 25% está reservado.',
+      close: 'Cerrar',
+      errorMessage: 'Hubo un error al enviar el formulario. Por favor intenta nuevamente.'
     },
     
     // CTA Section
@@ -245,6 +246,7 @@ export const translations = {
     trustedBy: {
       title: 'Empresas que confían en nosotros',
       technologies: 'Tecnologías que dominamos',
+      beFirst: 'Sé el primero',
     },
 
     // FAQ Section
@@ -400,36 +402,24 @@ export const translations = {
         satisfaction: 'Satisfied clients',
         years: 'Years of experience'
       },
+      promo: {
+        discount: 'discount',
+        title: 'Your testimonial could be here',
+        description: 'Be among the first clients to trust us and get an exclusive 25% discount on your project. Your success story deserves to be told.',
+        cta: 'Get 25% discount'
+      },
       items: {
-        carlos: {
+        vuelatour: {
           name: 'Carlos Mendoza',
           role: 'CEO',
           company: 'Vuelatour',
           quote: 'EDDCODE turned our vision into reality. In just one week we had a perfectly functioning booking platform. Their team understood exactly what we needed and communication was exceptional throughout the process.'
         },
-        maria: {
-          name: 'María González',
-          role: 'CTO',
-          company: 'FinanceHub MX',
-          quote: 'We needed to integrate multiple legacy systems with a new platform. EDDCODE not only achieved it but improved performance by 300%. Their expertise in APIs and architecture is impressive.'
-        },
-        roberto: {
-          name: 'Roberto Sánchez',
-          role: 'Founder',
-          company: 'DeliverYa',
-          quote: 'As a startup, every dollar counts. EDDCODE delivered a delivery app that competes with the big players at a fraction of the cost. Post-launch support has been invaluable.'
-        },
-        ana: {
-          name: 'Ana Martínez',
-          role: 'VP of Operations',
-          company: 'LogiTrack',
-          quote: 'They implemented a real-time tracking system that reduced our delivery times by 40%. The team is professional, punctual, and always available to answer any questions.'
-        },
-        fernando: {
-          name: 'Fernando López',
+        jetset: {
+          name: 'Luis Hernández',
           role: 'General Director',
-          company: 'MediCare Plus',
-          quote: 'The telemedicine platform they developed meets all health regulations and is incredibly easy to use. Our doctors and patients adopted it immediately.'
+          company: 'Jetset Transfers',
+          quote: 'We needed a robust and professional booking system. EDDCODE delivered a solution that exceeded our expectations in just one week. The automatic quoter and real-time tracking have transformed our operations.'
         }
       }
     },
@@ -442,6 +432,14 @@ export const translations = {
       deliveredIn: 'Delivered in',
       week: 'week',
       weeks: 'weeks',
+      promo: {
+        yourProject: 'Your project here',
+        discount: 'discount',
+        available: 'Available',
+        title: 'Be among the first',
+        description: 'Reserve this spot for your project and get an exclusive 25% discount. Tell us your idea and we\'ll make it happen.',
+        cta: 'Reserve with discount'
+      },
       projects: {
         vuelatour: {
           title: 'Vuelatour',
@@ -456,36 +454,41 @@ export const translations = {
           tags: 'Next.js,TypeScript,SEO,Booking',
           metric: '+8,000 transfers',
           metricLabel: 'completed'
-        },
-        financehub: {
-          title: 'FinanceHub MX',
-          description: 'Enterprise financial dashboard with Mexican bank integration, automatic reports and predictive cash flow analysis.',
-          tags: 'React,Node.js,PostgreSQL,Banking APIs',
-          metric: '$2M USD',
-          metricLabel: 'processed monthly'
-        },
-        deliverya: {
-          title: 'DeliverYa',
-          description: 'Delivery app with real-time tracking, integrated payment system and route optimization algorithm.',
-          tags: 'React Native,Firebase,Google Maps,Stripe',
-          metric: '+10,000',
-          metricLabel: 'monthly deliveries'
-        },
-        logitrack: {
-          title: 'LogiTrack',
-          description: 'Logistics management system with GPS tracking, route optimization and real-time performance reports.',
-          tags: 'Next.js,Python,TensorFlow,AWS',
-          metric: '-40%',
-          metricLabel: 'delivery time'
-        },
-        medicare: {
-          title: 'MediCare Plus',
-          description: 'Telemedicine platform with video consultations, electronic health records and appointment system compliant with health regulations.',
-          tags: 'React,WebRTC,Node.js,HIPAA',
-          metric: '+15,000',
-          metricLabel: 'consultations completed'
         }
       }
+    },
+
+    // Promo Form
+    promoForm: {
+      discountBadge: 'exclusive discount',
+      title: 'Reserve your spot with 25% discount',
+      subtitle: 'Tell us about your project and we\'ll contact you with a special quote.',
+      name: 'Name',
+      namePlaceholder: 'Your full name',
+      company: 'Company',
+      companyPlaceholder: 'Your company name',
+      email: 'Email',
+      phone: 'Phone',
+      projectType: 'Project type',
+      selectProjectType: 'Select project type',
+      projectTypes: {
+        landing: 'Landing Page / Website',
+        webapp: 'Web Application',
+        ecommerce: 'E-commerce / Online Store',
+        api: 'API / System Integration',
+        mobile: 'Mobile Application',
+        other: 'Other'
+      },
+      message: 'Describe your project',
+      messagePlaceholder: 'Tell us what you need: features, goals, design references...',
+      discountInfo: 'By submitting this form, your project automatically qualifies for the 25% discount on the final quote.',
+      sending: 'Sending...',
+      submit: 'Request quote with discount',
+      successTitle: 'Request sent!',
+      successMessage: 'We have received your request. We\'ll contact you within 24 hours.',
+      successDiscount: 'Your 25% discount is reserved.',
+      close: 'Close',
+      errorMessage: 'There was an error sending the form. Please try again.'
     },
     
     // CTA Section
@@ -532,6 +535,7 @@ export const translations = {
     trustedBy: {
       title: 'Companies that trust us',
       technologies: 'Technologies we master',
+      beFirst: 'Be the first',
     },
 
     // FAQ Section

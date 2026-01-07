@@ -332,6 +332,121 @@ export const getSoftwareApplicationSchema = (locale: string): Record<string, unk
   }
 }
 
+// Review/Rating Schema para testimonios reales
+export const getReviewSchema = (locale: string): Record<string, unknown> => {
+  const isSpanish = locale === 'es'
+
+  const reviews = [
+    {
+      author: 'Carlos Mendoza',
+      authorTitle: 'CEO',
+      company: 'Vuelatour',
+      rating: 5,
+      reviewBody: isSpanish
+        ? 'EDDCODE transformó completamente nuestra presencia digital. En solo una semana entregaron un sitio web que superó todas nuestras expectativas. El equipo es altamente profesional y la comunicación fue excelente durante todo el proyecto.'
+        : 'EDDCODE completely transformed our digital presence. In just one week they delivered a website that exceeded all our expectations. The team is highly professional and communication was excellent throughout the project.'
+    },
+    {
+      author: 'Luis Hernández',
+      authorTitle: isSpanish ? 'Director General' : 'General Director',
+      company: 'Jetset Transfers',
+      rating: 5,
+      reviewBody: isSpanish
+        ? 'Trabajar con EDDCODE fue una experiencia excepcional. Entendieron perfectamente nuestras necesidades de negocio y crearon una solución que realmente impulsa nuestras operaciones. El soporte post-lanzamiento ha sido impecable.'
+        : 'Working with EDDCODE was an exceptional experience. They perfectly understood our business needs and created a solution that truly drives our operations. Post-launch support has been impeccable.'
+    }
+  ]
+
+  return {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    "@id": `${baseUrl}/#organization`,
+    name: "EDDCODE",
+    review: reviews.map(review => ({
+      "@type": "Review",
+      author: {
+        "@type": "Person",
+        name: review.author,
+        jobTitle: review.authorTitle
+      },
+      reviewRating: {
+        "@type": "Rating",
+        ratingValue: review.rating,
+        bestRating: 5,
+        worstRating: 1
+      },
+      reviewBody: review.reviewBody,
+      itemReviewed: {
+        "@type": "Organization",
+        name: "EDDCODE"
+      },
+      publisher: {
+        "@type": "Organization",
+        name: review.company
+      }
+    })),
+    aggregateRating: {
+      "@type": "AggregateRating",
+      ratingValue: "5.0",
+      reviewCount: "2",
+      bestRating: "5",
+      worstRating: "1"
+    }
+  }
+}
+
+// Portfolio/CreativeWork Schema para proyectos reales
+export const getPortfolioSchema = (locale: string): Record<string, unknown> => {
+  const isSpanish = locale === 'es'
+
+  const projects = [
+    {
+      name: 'Vuelatour',
+      url: 'https://www.vuelatour.com',
+      description: isSpanish
+        ? 'Plataforma de reservas de viajes con integración de pagos y sistema de gestión de tours. Desarrollada con Next.js, TypeScript y APIs de terceros.'
+        : 'Travel booking platform with payment integration and tour management system. Built with Next.js, TypeScript and third-party APIs.',
+      image: `${baseUrl}/portfolio/vuelatour.jpg`,
+      keywords: ['Next.js', 'TypeScript', 'React', 'Payment Integration', 'Travel Tech']
+    },
+    {
+      name: 'Jetset Transfers',
+      url: 'https://www.jetsetcancun.com',
+      description: isSpanish
+        ? 'Sistema de reservas de transfers aeroportuarios con cotizador en tiempo real y gestión de flotas. Arquitectura moderna con React y Node.js.'
+        : 'Airport transfer booking system with real-time quotes and fleet management. Modern architecture with React and Node.js.',
+      image: `${baseUrl}/portfolio/jetset.jpg`,
+      keywords: ['React', 'Node.js', 'Real-time', 'Fleet Management', 'Travel Tech']
+    }
+  ]
+
+  return {
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    name: isSpanish ? "Portafolio de EDDCODE" : "EDDCODE Portfolio",
+    description: isSpanish
+      ? "Proyectos de desarrollo de software completados por EDDCODE"
+      : "Software development projects completed by EDDCODE",
+    numberOfItems: projects.length,
+    itemListElement: projects.map((project, index) => ({
+      "@type": "ListItem",
+      position: index + 1,
+      item: {
+        "@type": "CreativeWork",
+        name: project.name,
+        url: project.url,
+        description: project.description,
+        image: project.image,
+        creator: {
+          "@id": `${baseUrl}/#organization`
+        },
+        keywords: project.keywords.join(', '),
+        dateCreated: "2024"
+      }
+    }))
+  }
+}
+
 // Exportar schemas legacy para compatibilidad
 export const websiteSchema = getWebsiteSchema('es')
 export const breadcrumbSchema = getBreadcrumbSchema('es')

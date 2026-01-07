@@ -65,7 +65,7 @@ export default function LocalePage({ params }: Props) {
         <ConsoleDemo />
         <Portafolio />
         <Testimonios />
-        <FAQ />
+        <FAQ onContactClick={() => handleContactFormOpen('faq')} />
         <CTA onScheduleClick={() => handleScheduleFormOpen('cta')} />
       </main>
 

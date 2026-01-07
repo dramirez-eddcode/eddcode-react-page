@@ -57,16 +57,16 @@ export const trackContactFormOpen = (formType: 'contact' | 'schedule', source?: 
   })
 }
 
-export const trackContactFormSubmit = (formType: 'contact' | 'schedule', source?: string) => {
+export const trackContactFormSubmit = (formType: 'contact' | 'schedule' | 'promo_25_discount', source?: string) => {
   trackEvent('form_submit', {
     form_type: formType,
     form_source: source || 'unknown',
     event_category: 'conversion',
-    value: formType === 'schedule' ? 100 : 75
+    value: formType === 'promo_25_discount' ? 150 : formType === 'schedule' ? 100 : 75
   })
 }
 
-export const trackContactFormError = (formType: 'contact' | 'schedule', error: string) => {
+export const trackContactFormError = (formType: 'contact' | 'schedule' | 'promo', error: string) => {
   trackEvent('form_error', {
     form_type: formType,
     error_message: error,
@@ -204,6 +204,50 @@ export const trackTestimonialView = (testimonialId: string, company: string, ind
     value: 5
   })
   addLeadScore('service_interest')
+}
+
+// === PROMOTIONAL SLOT TRACKING ===
+export const trackPromoSlotView = (slotNumber: number, location: 'portfolio' | 'testimonials' | 'trusted_by') => {
+  trackEvent('promo_slot_view', {
+    event_category: 'promo_engagement',
+    slot_number: slotNumber,
+    promo_location: location,
+    discount_offered: '25%',
+    value: 10
+  })
+}
+
+export const trackPromoSlotClick = (slotNumber: number, location: 'portfolio' | 'testimonials' | 'trusted_by') => {
+  trackEvent('promo_slot_click', {
+    event_category: 'promo_conversion',
+    slot_number: slotNumber,
+    promo_location: location,
+    discount_offered: '25%',
+    value: 50
+  })
+  addLeadScore('cta_click')
+}
+
+export const trackPromoFormOpen = (slotNumber: number, location: string) => {
+  trackEvent('promo_form_open', {
+    event_category: 'promo_conversion',
+    slot_number: slotNumber,
+    promo_location: location,
+    discount_offered: '25%',
+    value: 75
+  })
+  addLeadScore('form_open')
+}
+
+export const trackPromoFormSubmit = (slotNumber: number | null, projectType: string) => {
+  trackEvent('promo_form_submit', {
+    event_category: 'promo_conversion',
+    slot_number: slotNumber,
+    project_type: projectType,
+    discount_offered: '25%',
+    value: 200
+  })
+  addLeadScore('form_submit')
 }
 
 // === WHATSAPP CONVERSION EVENT ===

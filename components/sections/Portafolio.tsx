@@ -1,11 +1,12 @@
 // components/sections/Portafolio.tsx - Grid de proyectos reales con casos de éxito
 'use client'
-import React from 'react'
+import React, { useState } from 'react'
 import Image from 'next/image'
 import { TexturedWaveCard } from '../ui/TexturedWaveCard'
 import { useTranslation } from '@/lib/useTranslation'
 import { useSectionTracking } from '@/components/analytics/useAnalytics'
 import { trackPortfolioView, trackEvent } from '@/components/analytics/gtag'
+import { PromoContactForm } from '../ui/PromoContactForm'
 
 // Componente de preview con imagen real del sitio
 interface ProjectPreviewProps {
@@ -50,6 +51,8 @@ const ProjectPreview: React.FC<ProjectPreviewProps> = ({ src, alt, fallbackGradi
 export const Portafolio: React.FC = () => {
   const { t } = useTranslation()
   const sectionRef = useSectionTracking('portafolio', 0.3)
+  const [isPromoFormOpen, setIsPromoFormOpen] = useState(false)
+  const [selectedSlot, setSelectedSlot] = useState<number | null>(null)
 
   const handleProjectClick = (projectName: string, projectUrl: string) => {
     trackPortfolioView(projectName, 'web_application')
@@ -60,7 +63,18 @@ export const Portafolio: React.FC = () => {
     })
   }
 
-  const projects = [
+  const handlePromoSlotClick = (slotNumber: number) => {
+    setSelectedSlot(slotNumber)
+    setIsPromoFormOpen(true)
+    trackEvent('promo_slot_click', {
+      event_category: 'portfolio',
+      slot_number: slotNumber,
+      discount: '25%'
+    })
+  }
+
+  // Proyectos reales
+  const realProjects = [
     {
       id: 'vuelatour',
       url: 'https://www.vuelatour.com',
@@ -74,169 +88,223 @@ export const Portafolio: React.FC = () => {
       id: 'jetset',
       url: 'https://www.jetsetcancun.com',
       image: '/portfolio/jetset.jpg',
-      deliveryTime: 2,
+      deliveryTime: 1,
       featured: true,
       waveColor: 'rgba(239, 68, 68, 0.3)',
       fallbackGradient: 'from-red-900 via-rose-800 to-orange-700'
-    },
-    {
-      id: 'financehub',
-      url: '#',
-      image: '/portfolio/financehub.jpg',
-      deliveryTime: 3,
-      featured: false,
-      waveColor: 'rgba(34, 197, 94, 0.3)',
-      fallbackGradient: 'from-emerald-900 via-green-800 to-teal-700'
-    },
-    {
-      id: 'deliverya',
-      url: '#',
-      image: '/portfolio/deliverya.jpg',
-      deliveryTime: 4,
-      featured: false,
-      waveColor: 'rgba(249, 115, 22, 0.3)',
-      fallbackGradient: 'from-orange-900 via-amber-800 to-yellow-700'
-    },
-    {
-      id: 'logitrack',
-      url: '#',
-      image: '/portfolio/logitrack.jpg',
-      deliveryTime: 6,
-      featured: false,
-      waveColor: 'rgba(139, 92, 246, 0.3)',
-      fallbackGradient: 'from-violet-900 via-purple-800 to-indigo-700'
-    },
-    {
-      id: 'medicare',
-      url: '#',
-      image: '/portfolio/medicare.jpg',
-      deliveryTime: 8,
-      featured: false,
-      waveColor: 'rgba(236, 72, 153, 0.3)',
-      fallbackGradient: 'from-pink-900 via-rose-800 to-red-700'
     }
   ]
 
+  // Slots promocionales para futuros proyectos
+  const promoSlots = [
+    { id: 1, waveColor: 'rgba(34, 197, 94, 0.3)', fallbackGradient: 'from-emerald-900 via-green-800 to-teal-700' },
+    { id: 2, waveColor: 'rgba(249, 115, 22, 0.3)', fallbackGradient: 'from-orange-900 via-amber-800 to-yellow-700' },
+    { id: 3, waveColor: 'rgba(139, 92, 246, 0.3)', fallbackGradient: 'from-violet-900 via-purple-800 to-indigo-700' },
+    { id: 4, waveColor: 'rgba(236, 72, 153, 0.3)', fallbackGradient: 'from-pink-900 via-rose-800 to-red-700' }
+  ]
+
   return (
-    <section ref={sectionRef} className="py-24 px-6" id="portafolio" aria-labelledby="portafolio-title">
-      <div className="max-w-6xl mx-auto">
-        <div className="text-center mb-16">
-          <h2
-            id="portafolio-title"
-            className="
-              text-3xl md:text-4xl lg:text-5xl font-bold mb-6
-              bg-gradient-to-r from-white via-white to-white/70
-              bg-clip-text text-transparent
-            "
-          >
-            {t('portfolio.title')}
-          </h2>
-          <p className="text-lg md:text-xl text-fg-muted max-w-3xl mx-auto">
-            {t('portfolio.subtitle')}
-          </p>
-        </div>
+    <>
+      <section ref={sectionRef} className="py-24 px-6" id="portafolio" aria-labelledby="portafolio-title">
+        <div className="max-w-6xl mx-auto">
+          <div className="text-center mb-16">
+            <h2
+              id="portafolio-title"
+              className="
+                text-3xl md:text-4xl lg:text-5xl font-bold mb-6
+                bg-gradient-to-r from-white via-white to-white/70
+                bg-clip-text text-transparent
+              "
+            >
+              {t('portfolio.title')}
+            </h2>
+            <p className="text-lg md:text-xl text-fg-muted max-w-3xl mx-auto">
+              {t('portfolio.subtitle')}
+            </p>
+          </div>
 
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {projects.map((project, index) => {
-            const title = t(`portfolio.projects.${project.id}.title`)
-            const description = t(`portfolio.projects.${project.id}.description`)
-            const tagsString = t(`portfolio.projects.${project.id}.tags`)
-            const tags = typeof tagsString === 'string' ? tagsString.split(',') : []
-            const metric = t(`portfolio.projects.${project.id}.metric`)
-            const metricLabel = t(`portfolio.projects.${project.id}.metricLabel`)
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {/* Proyectos reales */}
+            {realProjects.map((project, index) => {
+              const title = t(`portfolio.projects.${project.id}.title`)
+              const description = t(`portfolio.projects.${project.id}.description`)
+              const tagsString = t(`portfolio.projects.${project.id}.tags`)
+              const tags = typeof tagsString === 'string' ? tagsString.split(',') : []
+              const metric = t(`portfolio.projects.${project.id}.metric`)
+              const metricLabel = t(`portfolio.projects.${project.id}.metricLabel`)
 
-            return (
-              <TexturedWaveCard
-                key={project.id}
-                className="group animate-fade-up"
-                style={{ animationDelay: `${index * 150}ms` }}
-                waveColor={project.waveColor}
-              >
-                <a
-                  href={project.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  onClick={() => handleProjectClick(String(title), project.url)}
-                  className="block"
+              return (
+                <TexturedWaveCard
+                  key={project.id}
+                  className="group animate-fade-up"
+                  style={{ animationDelay: `${index * 150}ms` }}
+                  waveColor={project.waveColor}
                 >
-                  {/* Project Image */}
-                  <div className="mb-6">
-                    <ProjectPreview
-                      src={project.image}
-                      alt={String(title)}
-                      fallbackGradient={project.fallbackGradient}
-                    />
+                  <a
+                    href={project.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    onClick={() => handleProjectClick(String(title), project.url)}
+                    className="block"
+                  >
+                    {/* Project Image */}
+                    <div className="mb-6">
+                      <ProjectPreview
+                        src={project.image}
+                        alt={String(title)}
+                        fallbackGradient={project.fallbackGradient}
+                      />
+                    </div>
+
+                    {/* Delivery Badge */}
+                    <div className="flex items-center gap-3 mb-4">
+                      <span className="
+                        px-3 py-1 text-xs font-semibold rounded-full
+                        bg-green-500/20 text-green-400
+                        ring-1 ring-green-500/30
+                      ">
+                        {t('portfolio.deliveredIn')} {project.deliveryTime} {project.deliveryTime === 1 ? t('portfolio.week') : t('portfolio.weeks')}
+                      </span>
+                      {project.featured && (
+                        <span className="
+                          px-3 py-1 text-xs font-semibold rounded-full
+                          bg-amber-500/20 text-amber-400
+                          ring-1 ring-amber-500/30
+                        ">
+                          Featured
+                        </span>
+                      )}
+                    </div>
+
+                    {/* Title & Description */}
+                    <h3 className="text-2xl font-bold mb-3 text-white group-hover:text-brand-primary transition-colors">
+                      {title}
+                    </h3>
+
+                    <p className="text-fg-muted leading-relaxed mb-6">
+                      {description}
+                    </p>
+
+                    {/* Metric */}
+                    {metric && (
+                      <div className="flex items-center gap-2 mb-6 text-fg-soft">
+                        <svg className="w-5 h-5 text-green-400" fill="currentColor" viewBox="0 0 20 20">
+                          <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                        </svg>
+                        <span className="font-semibold text-white">{metric}</span>
+                        <span className="text-fg-muted">{metricLabel}</span>
+                      </div>
+                    )}
+
+                    {/* Tags */}
+                    <div className="flex flex-wrap gap-2 mb-6">
+                      {tags.map((tag, tagIndex) => (
+                        <span
+                          key={tagIndex}
+                          className="
+                            px-3 py-1 text-xs font-medium rounded-full
+                            bg-brand-primary/10 text-brand-primary
+                            ring-1 ring-brand-primary/20
+                          "
+                        >
+                          {tag}
+                        </span>
+                      ))}
+                    </div>
+
+                    {/* View Project Link */}
+                    <div className="flex items-center gap-2 text-brand-primary group-hover:gap-3 transition-all">
+                      <span className="font-medium">{t('portfolio.viewProject')}</span>
+                      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                      </svg>
+                    </div>
+                  </a>
+                </TexturedWaveCard>
+              )
+            })}
+
+            {/* Slots promocionales */}
+            {promoSlots.map((slot, index) => (
+              <TexturedWaveCard
+                key={`promo-${slot.id}`}
+                className="group animate-fade-up cursor-pointer"
+                style={{ animationDelay: `${(realProjects.length + index) * 150}ms` }}
+                waveColor={slot.waveColor}
+              >
+                <button
+                  onClick={() => handlePromoSlotClick(slot.id)}
+                  className="block w-full text-left"
+                >
+                  {/* Promo Visual */}
+                  <div className={`w-full h-48 md:h-56 rounded-xl overflow-hidden bg-gradient-to-br ${slot.fallbackGradient} flex items-center justify-center relative mb-6`}>
+                    <div className="absolute inset-0 bg-black/20"></div>
+                    <div className="relative z-10 text-center px-4">
+                      <div className="
+                        w-20 h-20 mx-auto mb-4 rounded-full
+                        bg-white/10 backdrop-blur-sm
+                        flex items-center justify-center
+                        ring-2 ring-white/20
+                      ">
+                        <svg className="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 4v16m8-8H4" />
+                        </svg>
+                      </div>
+                      <span className="text-white/90 font-medium text-sm">{t('portfolio.promo.yourProject')}</span>
+                    </div>
                   </div>
 
-                  {/* Delivery Badge */}
+                  {/* Promo Badge */}
                   <div className="flex items-center gap-3 mb-4">
                     <span className="
                       px-3 py-1 text-xs font-semibold rounded-full
                       bg-green-500/20 text-green-400
                       ring-1 ring-green-500/30
+                      animate-pulse
                     ">
-                      {t('portfolio.deliveredIn')} {project.deliveryTime} {project.deliveryTime === 1 ? t('portfolio.week') : t('portfolio.weeks')}
+                      25% {t('portfolio.promo.discount')}
                     </span>
-                    {project.featured && (
-                      <span className="
-                        px-3 py-1 text-xs font-semibold rounded-full
-                        bg-amber-500/20 text-amber-400
-                        ring-1 ring-amber-500/30
-                      ">
-                        Featured
-                      </span>
-                    )}
+                    <span className="
+                      px-3 py-1 text-xs font-semibold rounded-full
+                      bg-blue-500/20 text-blue-400
+                      ring-1 ring-blue-500/30
+                    ">
+                      {t('portfolio.promo.available')}
+                    </span>
                   </div>
 
                   {/* Title & Description */}
                   <h3 className="text-2xl font-bold mb-3 text-white group-hover:text-brand-primary transition-colors">
-                    {title}
+                    {t('portfolio.promo.title')}
                   </h3>
 
                   <p className="text-fg-muted leading-relaxed mb-6">
-                    {description}
+                    {t('portfolio.promo.description')}
                   </p>
 
-                  {/* Metric */}
-                  {metric && (
-                    <div className="flex items-center gap-2 mb-6 text-fg-soft">
-                      <svg className="w-5 h-5 text-green-400" fill="currentColor" viewBox="0 0 20 20">
-                        <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                      </svg>
-                      <span className="font-semibold text-white">{metric}</span>
-                      <span className="text-fg-muted">{metricLabel}</span>
-                    </div>
-                  )}
-
-                  {/* Tags */}
-                  <div className="flex flex-wrap gap-2 mb-6">
-                    {tags.map((tag, tagIndex) => (
-                      <span
-                        key={tagIndex}
-                        className="
-                          px-3 py-1 text-xs font-medium rounded-full
-                          bg-brand-primary/10 text-brand-primary
-                          ring-1 ring-brand-primary/20
-                        "
-                      >
-                        {tag}
-                      </span>
-                    ))}
-                  </div>
-
-                  {/* View Project Link */}
-                  <div className="flex items-center gap-2 text-brand-primary group-hover:gap-3 transition-all">
-                    <span className="font-medium">{t('portfolio.viewProject')}</span>
+                  {/* CTA */}
+                  <div className="flex items-center gap-2 text-green-400 group-hover:gap-3 transition-all">
+                    <span className="font-medium">{t('portfolio.promo.cta')}</span>
                     <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
                     </svg>
                   </div>
-                </a>
+                </button>
               </TexturedWaveCard>
-            )
-          })}
+            ))}
+          </div>
         </div>
-      </div>
-    </section>
+      </section>
+
+      {/* Formulario de contacto promocional */}
+      <PromoContactForm
+        isOpen={isPromoFormOpen}
+        onClose={() => {
+          setIsPromoFormOpen(false)
+          setSelectedSlot(null)
+        }}
+        slotNumber={selectedSlot}
+      />
+    </>
   )
 }
