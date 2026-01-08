@@ -58,12 +58,30 @@ export const trackContactFormOpen = (formType: 'contact' | 'schedule', source?: 
 }
 
 export const trackContactFormSubmit = (formType: 'contact' | 'schedule' | 'promo_25_discount', source?: string) => {
+  const locale = getLocale()
+  const value = formType === 'promo_25_discount' ? 150 : formType === 'schedule' ? 100 : 75
+
+  // Evento personalizado
   trackEvent('form_submit', {
     form_type: formType,
     form_source: source || 'unknown',
     event_category: 'conversion',
-    value: formType === 'promo_25_discount' ? 150 : formType === 'schedule' ? 100 : 75
+    value: value,
+    currency: 'USD'
   })
+
+  // Enviar como evento estándar de GA4 (generate_lead)
+  if (typeof window !== 'undefined' && window.gtag) {
+    window.gtag('event', 'generate_lead', {
+      currency: 'USD',
+      value: value,
+      lead_source: source || 'unknown',
+      form_type: formType,
+      language: locale
+    })
+  }
+
+  addLeadScore('form_submit')
 }
 
 export const trackContactFormError = (formType: 'contact' | 'schedule' | 'promo', error: string) => {
@@ -240,13 +258,38 @@ export const trackPromoFormOpen = (slotNumber: number, location: string) => {
 }
 
 export const trackPromoFormSubmit = (slotNumber: number | null, projectType: string) => {
+  const locale = getLocale()
+
+  // Evento principal de conversión
   trackEvent('promo_form_submit', {
     event_category: 'promo_conversion',
     slot_number: slotNumber,
     project_type: projectType,
     discount_offered: '25%',
-    value: 200
+    value: 200,
+    currency: 'USD'
   })
+
+  // Enviar como evento de conversión estándar de GA4 (generate_lead)
+  if (typeof window !== 'undefined' && window.gtag) {
+    window.gtag('event', 'generate_lead', {
+      currency: 'USD',
+      value: 200,
+      lead_source: `promo_slot_${slotNumber}`,
+      discount: '25%',
+      project_type: projectType,
+      language: locale
+    })
+
+    // Enviar como conversión personalizada con alto valor
+    window.gtag('event', 'conversion', {
+      send_to: process.env.NEXT_PUBLIC_GA_TRACKING_ID,
+      value: 200,
+      currency: 'USD',
+      transaction_id: `promo_${Date.now()}_${slotNumber}`
+    })
+  }
+
   addLeadScore('form_submit')
 }
 
